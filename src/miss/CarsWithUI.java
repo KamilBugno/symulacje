@@ -43,7 +43,7 @@ public class CarsWithUI extends GUIState{
 
 
         Cars cars = (Cars) state;
-        yardPortrayal.setField( cars.yard );
+        yardPortrayal.setField( cars.getYard() );
         yardPortrayal.setPortrayalForAll(new OvalPortrayal2D());
 
         display.reset();
