@@ -1,3 +1,4 @@
+package miss;
 import sim.portrayal.continuous.*;
 import sim.engine.*;
 import sim.display.*;
@@ -6,9 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class CarsWithUI extends GUIState
-{
-    public Display2D display;
+public class CarsWithUI extends GUIState{
+
+	public Display2D display;
     public JFrame displayFrame;
     ContinuousPortrayal2D yardPortrayal = new ContinuousPortrayal2D();
     public static void main(String[] args)
@@ -20,6 +21,7 @@ public class CarsWithUI extends GUIState
     public CarsWithUI() { super(new Cars( System.currentTimeMillis())); }
     public CarsWithUI(SimState state) { super(state); }
     public static String getName() { return "Cars"; }
+	    
     public void start()
     {
         super.start();
@@ -32,7 +34,7 @@ public class CarsWithUI extends GUIState
     }
     public void setupPortrayals()
     {
-        Image i = new ImageIcon(getClass().getResource("roads.jpg")).getImage();
+        Image i = new ImageIcon(getClass().getResource("/miss/roads.jpg")).getImage();
         BufferedImage b = display.getGraphicsConfiguration().createCompatibleImage(i.getWidth(null), i.getHeight(null));
         Graphics g = b.getGraphics();
         g.drawImage(i,0,0,i.getWidth(null),i.getHeight(null),null);
