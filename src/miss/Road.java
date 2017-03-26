@@ -19,22 +19,27 @@ public class Road {
     private int numCars;
     private MutableDouble2D position;
     private MersenneTwisterFast random;
+    int startPoint;
+    int endPoint;
 
-    public Road(){
+    public Road(int startPoint, int endPoint){
         carsOnRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
         yardHeight = 100;
         yardWidth = 100;
         numCars = 15;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
         createCars();
     }
 	
 	public void createCars(){
 		for(int i = 0; i < numCars; i++){
-			position =  new MutableDouble2D(yardWidth * random.nextDouble(), yardHeight * 0.5);
+			position =  new MutableDouble2D(startPoint + (endPoint-startPoint) * random.nextDouble(), yardHeight * 0.5);
 			Car car = new Car(position);
 			carsOnRoad.add(car);
-			//System.out.println(car.startPosition);
+
+			//System.out.println("position.x: "+ position.x + ", position.y: " + position.y);
 		}
 		
 		Collections.sort(carsOnRoad, new Comparator<Car>(){
@@ -55,89 +60,50 @@ public class Road {
 		
 		int index = carsOnRoad.indexOf(car);
 		double diff;
-		if(index != 0){
-	//		System.out.println(carsOnRoad.get(index-1).currentPosition);
-			diff = carsOnRoad.get(index - 1).getCurrentPosition().x - car.getCurrentPosition().x;
 
-            boolean isOnTheRoad;
-            double currentPosition = carsOnRoad.get(index).getCurrentPosition().x;
-            if(currentPosition > 46 & currentPosition <48){
-                isOnTheRoad = false;
-                System.out.println("!isOnTheRoad");
-                car.setNeedToStop(true);
-            }else{
-                isOnTheRoad = true;
-            }
+        if (index != 0) {
+            diff = carsOnRoad.get(index - 1).getCurrentPosition().x - car.getCurrentPosition().x;
+        }else{
+            diff = 20;
+        }
+
+        boolean isOnTheRoad;
+        double currentPosition = carsOnRoad.get(index).getCurrentPosition().x;
+        if((startPoint < currentPosition) && (currentPosition < (endPoint - 3))){
+            isOnTheRoad = true;
+        }else{
+            isOnTheRoad = false;
+            car.setNeedToStop(true);
+
+            //do pomyslenia: jak przeniesc auto z jednej ulicy na kolejna uzywajac klasy Crossing?
+
+        }
 
 		//	System.out.println(diff + " between " + index + " and " + (index-1));
-			if(diff > 1 && diff < 4 && isOnTheRoad){
-				car.setNeedToSlowDown(true);
-                car.setNeedToStop(false);
-			}
-            else if(diff <= 1 || !isOnTheRoad){
-                car.setNeedToStop(true);
-            }
-			else if( diff > 15 && isOnTheRoad){
-				car.setNeedToSpeedUp(true);
-                car.setNeedToStop(false);
-			}
-			else if(isOnTheRoad){
-				car.setNeedToSlowDown(false);
-				car.setNeedToSpeedUp(false);
-                car.setNeedToStop(false);
-			}
-		}		
+        if(diff > 1 && diff < 4 && isOnTheRoad){
+            car.setNeedToSlowDown(true);
+            car.setNeedToStop(false);
+        }
+        else if(diff <= 1 || !isOnTheRoad){
+            car.setNeedToStop(true);
+        }
+        else if( diff > 15 && isOnTheRoad){
+            car.setNeedToSpeedUp(true);
+            car.setNeedToStop(false);
+        }
+        else if(isOnTheRoad){
+            car.setNeedToSlowDown(false);
+            car.setNeedToSpeedUp(false);
+            car.setNeedToStop(false);
+        }
+    }
 		
-	}
-	//zeby dwa auta nie byly w tym samym punkcie sprawdzac
+
 
     public List<Car> getCarsOnRoad() {
         return carsOnRoad;
     }
 
-    public void setCarsOnRoad(List<Car> carsOnRoad) {
-        this.carsOnRoad = carsOnRoad;
-    }
-
-    public int getYardHeight() {
-        return yardHeight;
-    }
-
-    public void setYardHeight(int yardHeight) {
-        this.yardHeight = yardHeight;
-    }
-
-    public int getYardWidth() {
-        return yardWidth;
-    }
-
-    public void setYardWidth(int yardWidth) {
-        this.yardWidth = yardWidth;
-    }
-
-    public int getNumCars() {
-        return numCars;
-    }
-
-    public void setNumCars(int numCars) {
-        this.numCars = numCars;
-    }
-
-    public MutableDouble2D getPosition() {
-        return position;
-    }
-
-    public void setPosition(MutableDouble2D position) {
-        this.position = position;
-    }
-
-    public MersenneTwisterFast getRandom() {
-        return random;
-    }
-
-    public void setRandom(MersenneTwisterFast random) {
-        this.random = random;
-    }
 }
 	
 

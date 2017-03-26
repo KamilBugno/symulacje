@@ -3,40 +3,61 @@ package miss;
 import sim.engine.SimState;
 import sim.field.continuous.Continuous2D;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cars extends SimState{
 
 	private Continuous2D yard;
-	private Road road;
+	private Crossing crossing;
+
+	//do pomyslenia: co bedziemy tutaj przechowywac - skrzyzowania, ulice, czy jeszcze inna strukture?
 
 	public Cars(long seed) {
 		super(seed);
 		yard = new Continuous2D(1.0,100,100);
-		road= new Road(); //raczej bedzie tu zbior wszystkich road i crossing, ale to tak na szybko
+
+		List<Road> roadsIn = new ArrayList<>();
+		roadsIn.add(new Road(0, 50));
+		List<Road> roadOut = new ArrayList<>();
+		roadOut.add(new Road(53, 100));
+		crossing = new Crossing(roadsIn,roadOut);
+
 	}
-	
+
 	public void start(){
 		super.start();
 		yard.clear();
-		
-		for(Car car: road.getCarsOnRoad()){
-			schedule.scheduleRepeating(car);
+
+		for(Road road: crossing.getIn()){
+			for(Car car: road.getCarsOnRoad()){
+				schedule.scheduleRepeating(car);
+			}
 		}
+		for(Road road: crossing.getOut()){
+			for(Car car: road.getCarsOnRoad()){
+				schedule.scheduleRepeating(car);
+			}
+		}
+
 	}
 
 	public Continuous2D getYard() {
 		return yard;
 	}
 
-	public void setYard(Continuous2D yard) {
-		this.yard = yard;
-	}
-
-	public Road getRoad() {
-		return road;
-	}
-
-	public void setRoad(Road road) {
-		this.road = road;
+	public Road getRoad(Car car){
+		for(Road road: crossing.getIn()){
+			if(road.getCarsOnRoad().contains(car)){
+				return road;
+			}
+		}
+		for(Road road: crossing.getOut()){
+			if(road.getCarsOnRoad().contains(car)){
+				return road;
+			}
+		}
+		return null;
 	}
 
 }

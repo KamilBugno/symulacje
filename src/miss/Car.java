@@ -37,7 +37,7 @@ public class Car implements Steppable{
 	//	System.out.println(needToSlowDown + " " + needToSpeedUp);
 
 		cars = (Cars) state;
-		cars.getRoad().setCarSpeedValues(this);
+		cars.getRoad(this).setCarSpeedValues(this);
 		if(isInitialStep){
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));
 			isInitialStep = false;
@@ -46,6 +46,9 @@ public class Car implements Steppable{
 		Double2D me = cars.getYard().getObjectLocation(this);
 
 		MutableDouble2D sumForces = new MutableDouble2D();
+
+		//do pomyslenia: jak rozdzielic ruch w zaleznosci od kierunku (os x lub y)?
+
 		if(!needToSlowDown && !needToSpeedUp && !needToStop){
 			sumForces.x += defaultSpeed;
 			//System.out.println("no change: "+ defaultSpeed);
@@ -62,45 +65,19 @@ public class Car implements Steppable{
 			sumForces.addIn(me);
 			cars.getYard().setObjectLocation(this, new Double2D(sumForces));
 			currentPosition = sumForces;
-			System.out.println("currentPosition: "+currentPosition);
+			//System.out.println("currentPosition: "+currentPosition);
 		}
-	}
-
-	public MutableDouble2D getStartPosition() {
-		return startPosition;
-	}
-
-	public void setStartPosition(MutableDouble2D startPosition) {
-		this.startPosition = startPosition;
 	}
 
 	public MutableDouble2D getCurrentPosition() {
 		return currentPosition;
 	}
 
-	public void setCurrentPosition(MutableDouble2D currentPosition) {
-		this.currentPosition = currentPosition;
-	}
-
-	public Cars getCars() {
-		return cars;
-	}
-
-	public void setCars(Cars cars) {
-		this.cars = cars;
-	}
-
-	public boolean isNeedToSlowDown() {
-		return needToSlowDown;
-	}
 
 	public void setNeedToSlowDown(boolean needToSlowDown) {
 		this.needToSlowDown = needToSlowDown;
 	}
 
-	public boolean isNeedToSpeedUp() {
-		return needToSpeedUp;
-	}
 
 	public void setNeedToSpeedUp(boolean needToSpeedUp) {
 		this.needToSpeedUp = needToSpeedUp;
@@ -110,13 +87,4 @@ public class Car implements Steppable{
 		this.needToStop = needToStop;
 	}
 
-
-	public double getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(double speed) {
-		this.speed = speed;
-	}
-	
 }

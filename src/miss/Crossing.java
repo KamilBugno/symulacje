@@ -5,12 +5,21 @@ import java.util.List;
 
 public class Crossing {
 
-	public List<Road> in = new ArrayList<Road>();
-	public List<Road> out = new ArrayList<Road>();
-	
+	private List<Road> in = new ArrayList<Road>();
+	private List<Road> out = new ArrayList<Road>();
+	// do pomyslenia: jak bedziemy rozdzielac drogi pionowe od poziomych?
+
 	public Crossing(List<Road> in, List<Road> out){
 		this.in = in;
 		this.out = out;
 	}
-	
+
+	public List<Road> getIn() {
+		return in;
+	}
+
+	public List<Road> getOut() {
+		return out;
+	}
+
 }
