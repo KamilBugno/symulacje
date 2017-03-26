@@ -25,7 +25,7 @@ public class Road {
         random = new MersenneTwisterFast();
         yardHeight = 100;
         yardWidth = 100;
-        numCars = 10;
+        numCars = 15;
         createCars();
     }
 	
@@ -59,16 +59,32 @@ public class Road {
 	//		System.out.println(carsOnRoad.get(index-1).currentPosition);
 			diff = carsOnRoad.get(index - 1).getCurrentPosition().x - car.getCurrentPosition().x;
 
+            boolean isOnTheRoad;
+            double currentPosition = carsOnRoad.get(index).getCurrentPosition().x;
+            if(currentPosition > 46 & currentPosition <48){
+                isOnTheRoad = false;
+                System.out.println("!isOnTheRoad");
+                car.setNeedToStop(true);
+            }else{
+                isOnTheRoad = true;
+            }
+
 		//	System.out.println(diff + " between " + index + " and " + (index-1));
-			if(diff < 3){
+			if(diff > 1 && diff < 4 && isOnTheRoad){
 				car.setNeedToSlowDown(true);
+                car.setNeedToStop(false);
 			}
-			else if( diff > 20){
+            else if(diff <= 1 || !isOnTheRoad){
+                car.setNeedToStop(true);
+            }
+			else if( diff > 15 && isOnTheRoad){
 				car.setNeedToSpeedUp(true);
+                car.setNeedToStop(false);
 			}
-			else {
+			else if(isOnTheRoad){
 				car.setNeedToSlowDown(false);
 				car.setNeedToSpeedUp(false);
+                car.setNeedToStop(false);
 			}
 		}		
 		

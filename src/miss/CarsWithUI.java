@@ -34,7 +34,7 @@ public class CarsWithUI extends GUIState{
     }
     public void setupPortrayals()
     {
-        Image i = new ImageIcon(getClass().getResource("/miss/roads.jpg")).getImage();
+        Image i = new ImageIcon(getClass().getResource("/miss/cross.jpg")).getImage();
         BufferedImage b = display.getGraphicsConfiguration().createCompatibleImage(i.getWidth(null), i.getHeight(null));
         Graphics g = b.getGraphics();
         g.drawImage(i,0,0,i.getWidth(null),i.getHeight(null),null);

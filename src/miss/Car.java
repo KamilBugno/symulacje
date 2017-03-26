@@ -1,5 +1,6 @@
 package miss;
 
+import ec.util.MersenneTwisterFast;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.util.Double2D;
@@ -11,14 +12,23 @@ public class Car implements Steppable{
 	private MutableDouble2D currentPosition;
 	private Cars cars;
 	private boolean needToSlowDown;
+	private boolean needToStop;
 	private boolean needToSpeedUp;
 	private boolean isInitialStep = true;
 	private double speed;
+	private MersenneTwisterFast random;
+	private double defaultSpeed;
 	
 	public Car(MutableDouble2D startPosition)
 	{
 		this.startPosition = startPosition;
-		this.currentPosition = startPosition;
+		currentPosition = startPosition;
+		random = new MersenneTwisterFast();
+		if(random.nextDouble()> 0.5){
+			defaultSpeed = 0.01;
+		}else{
+			defaultSpeed = 0.02;
+		}
 	}
 	
 
@@ -36,22 +46,24 @@ public class Car implements Steppable{
 		Double2D me = cars.getYard().getObjectLocation(this);
 
 		MutableDouble2D sumForces = new MutableDouble2D();
-		if(!needToSlowDown && !needToSpeedUp){
-			sumForces.x +=0.01;
+		if(!needToSlowDown && !needToSpeedUp && !needToStop){
+			sumForces.x += defaultSpeed;
+			//System.out.println("no change: "+ defaultSpeed);
 		}
-		if(needToSlowDown){
-			sumForces.x +=0.0005;
-		//	System.out.println("slowed down");
+		if(needToSlowDown && !needToStop){
+			sumForces.x += defaultSpeed/3;
+			//System.out.println("slowed down: ");
 		}
-		if(needToSpeedUp){
-			sumForces.x +=0.015;
-	//		System.out.println("speeded up");
+		if(needToSpeedUp && !needToStop){
+			sumForces.x += 4*defaultSpeed/3;
+			//System.out.println("speeded up: ");
 		}
-	//	System.out.println(sumForces);
-		sumForces.addIn(me);
-		cars.getYard().setObjectLocation(this, new Double2D(sumForces));
-		currentPosition = sumForces;
-		
+		if(!needToStop){
+			sumForces.addIn(me);
+			cars.getYard().setObjectLocation(this, new Double2D(sumForces));
+			currentPosition = sumForces;
+			System.out.println("currentPosition: "+currentPosition);
+		}
 	}
 
 	public MutableDouble2D getStartPosition() {
@@ -92,6 +104,10 @@ public class Car implements Steppable{
 
 	public void setNeedToSpeedUp(boolean needToSpeedUp) {
 		this.needToSpeedUp = needToSpeedUp;
+	}
+
+	public void setNeedToStop(boolean needToStop) {
+		this.needToStop = needToStop;
 	}
 
 
