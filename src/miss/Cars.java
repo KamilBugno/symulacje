@@ -2,6 +2,7 @@ package miss;
 
 import sim.engine.SimState;
 import sim.field.continuous.Continuous2D;
+import sim.util.Double2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +17,28 @@ public class Cars extends SimState{
 	public Cars(long seed) {
 		super(seed);
 		yard = new Continuous2D(1.0,100,100);
-
+		
+		Double2D point1 = new Double2D(0.0, 50.0);
+		Double2D point2 = new Double2D(0.0, 49.0);
+		
+		Double2D point3 = new Double2D(50.0, 50.0);
+		Double2D point4 = new Double2D(50.0, 49.0);
+		
+		
+		Double2D point5 = new Double2D(53.0, 50.0);
+		Double2D point6 = new Double2D(53.0, 49.0);
+		
+		Double2D point7 = new Double2D(100.0, 50.0);
+		Double2D point8 = new Double2D(100.0, 49.0);
+		
+		
+		
 		List<Road> roadsIn = new ArrayList<>();
-		roadsIn.add(new Road(0, 50, false, true));
-		roadsIn.add(new Road(0, 50, false, false));
+		roadsIn.add(new Road(point2, point4, false, true));
+		roadsIn.add(new Road(point1,point3, false, false));
 		List<Road> roadOut = new ArrayList<>();
-		roadOut.add(new Road(53, 100,false, true));
-		roadOut.add(new Road(53, 100,false, false));
+		roadOut.add(new Road(point6,point8, false, true));
+		roadOut.add(new Road(point5,point7, false, false));
 		crossing = new Crossing(roadsIn,roadOut);
 	
 

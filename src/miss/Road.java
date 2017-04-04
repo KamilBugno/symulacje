@@ -19,12 +19,12 @@ public class Road {
     private int numCars;
     private MutableDouble2D position;
     private MersenneTwisterFast random;
-    int startPoint;
-    int endPoint;
+    Double2D startPoint;
+    Double2D endPoint;
     private boolean vertical;
     private boolean left;
 
-    public Road(int startPoint, int endPoint, boolean vertical, boolean left){
+    public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left){
         carsOnRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
         yardHeight = 100;
@@ -40,10 +40,10 @@ public class Road {
 	public void createCars(boolean left, boolean vertical){
 		for(int i = 0; i < numCars; i++){
 			if(left){
-				position =  new MutableDouble2D(startPoint + (endPoint-startPoint) * random.nextDouble(), yardHeight * 0.49);
+				position =  new MutableDouble2D(startPoint.x + (endPoint.x-startPoint.x) * random.nextDouble(), yardHeight * 0.49);
 			}
 			if(!left){
-				position =  new MutableDouble2D(startPoint + (endPoint-startPoint) * random.nextDouble(), yardHeight * 0.5);
+				position =  new MutableDouble2D(startPoint.x + (endPoint.x-startPoint.x) * random.nextDouble(), yardHeight * 0.5);
 			}
 			Car car = new Car(position);
 			carsOnRoad.add(car);
@@ -81,7 +81,7 @@ public class Road {
         boolean isOnTheRoad = false;
         double currentPosition = carsOnRoad.get(index).getCurrentPosition().x;
         //if(!left){
-	        if((startPoint +3 < currentPosition) && (currentPosition < (endPoint - 3))){
+	        if((startPoint.x +3 < currentPosition) && (currentPosition < (endPoint.x - 3))){
 	            isOnTheRoad = true;
 	        }else{
 	            isOnTheRoad = false;
