@@ -21,21 +21,30 @@ public class Road {
     private MersenneTwisterFast random;
     int startPoint;
     int endPoint;
+    private boolean vertical;
+    private boolean left;
 
-    public Road(int startPoint, int endPoint){
+    public Road(int startPoint, int endPoint, boolean vertical, boolean left){
         carsOnRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
         yardHeight = 100;
         yardWidth = 100;
         numCars = 15;
+        this.vertical = vertical;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
-        createCars();
+        this.left = left;
+        createCars(left, vertical);
     }
 	
-	public void createCars(){
+	public void createCars(boolean left, boolean vertical){
 		for(int i = 0; i < numCars; i++){
-			position =  new MutableDouble2D(startPoint + (endPoint-startPoint) * random.nextDouble(), yardHeight * 0.5);
+			if(left){
+				position =  new MutableDouble2D(startPoint + (endPoint-startPoint) * random.nextDouble(), yardHeight * 0.49);
+			}
+			if(!left){
+				position =  new MutableDouble2D(startPoint + (endPoint-startPoint) * random.nextDouble(), yardHeight * 0.5);
+			}
 			Car car = new Car(position);
 			carsOnRoad.add(car);
 
@@ -57,27 +66,42 @@ public class Road {
 	}
 
 	public void setCarSpeedValues(Car car){
-		
+		if(left){
+			car.left = true;
+		}
 		int index = carsOnRoad.indexOf(car);
 		double diff;
 
         if (index != 0) {
-            diff = carsOnRoad.get(index - 1).getCurrentPosition().x - car.getCurrentPosition().x;
+            diff = Math.abs(carsOnRoad.get(index - 1).getCurrentPosition().x - car.getCurrentPosition().x);
         }else{
             diff = 20;
         }
 
-        boolean isOnTheRoad;
+        boolean isOnTheRoad = false;
         double currentPosition = carsOnRoad.get(index).getCurrentPosition().x;
-        if((startPoint < currentPosition) && (currentPosition < (endPoint - 3))){
-            isOnTheRoad = true;
-        }else{
-            isOnTheRoad = false;
-            car.setNeedToStop(true);
-
-            //do pomyslenia: jak przeniesc auto z jednej ulicy na kolejna uzywajac klasy Crossing?
-
-        }
+        //if(!left){
+	        if((startPoint +3 < currentPosition) && (currentPosition < (endPoint - 3))){
+	            isOnTheRoad = true;
+	        }else{
+	            isOnTheRoad = false;
+	            car.setNeedToStop(true);
+	
+	            //do pomyslenia: jak przeniesc auto z jednej ulicy na kolejna uzywajac klasy Crossing?
+	
+	        }
+  //      }
+//        if(left){
+//        	if((currentPosition - 3 >= startPoint) && (currentPosition + 3 <= endPoint)){
+//	            isOnTheRoad = true;
+//	        }else{
+//	            isOnTheRoad = false;
+//	            car.setNeedToStop(true);
+//	
+//	            //do pomyslenia: jak przeniesc auto z jednej ulicy na kolejna uzywajac klasy Crossing?
+//	
+//	        }
+//        }
 
 		//	System.out.println(diff + " between " + index + " and " + (index-1));
         if(diff > 1 && diff < 4 && isOnTheRoad){

@@ -18,10 +18,13 @@ public class Cars extends SimState{
 		yard = new Continuous2D(1.0,100,100);
 
 		List<Road> roadsIn = new ArrayList<>();
-		roadsIn.add(new Road(0, 50));
+		roadsIn.add(new Road(0, 50, false, true));
+		roadsIn.add(new Road(0, 50, false, false));
 		List<Road> roadOut = new ArrayList<>();
-		roadOut.add(new Road(53, 100));
+		roadOut.add(new Road(53, 100,false, true));
+		roadOut.add(new Road(53, 100,false, false));
 		crossing = new Crossing(roadsIn,roadOut);
+	
 
 	}
 

@@ -18,6 +18,7 @@ public class Car implements Steppable{
 	private double speed;
 	private MersenneTwisterFast random;
 	private double defaultSpeed;
+	boolean left;
 	
 	public Car(MutableDouble2D startPosition)
 	{
@@ -34,38 +35,54 @@ public class Car implements Steppable{
 
 	@Override
 	public void step(SimState state) {
-	//	System.out.println(needToSlowDown + " " + needToSpeedUp);
-
+	
 		cars = (Cars) state;
 		cars.getRoad(this).setCarSpeedValues(this);
 		if(isInitialStep){
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));
 			isInitialStep = false;
 		}
-
+		
 		Double2D me = cars.getYard().getObjectLocation(this);
 
 		MutableDouble2D sumForces = new MutableDouble2D();
-
-		//do pomyslenia: jak rozdzielic ruch w zaleznosci od kierunku (os x lub y)?
+	
+		//sumForces = startPosition;
 
 		if(!needToSlowDown && !needToSpeedUp && !needToStop){
-			sumForces.x += defaultSpeed;
-			//System.out.println("no change: "+ defaultSpeed);
+			if(left){
+				sumForces.x -= defaultSpeed;
+			}
+			else{
+				sumForces.x += defaultSpeed;
+			}
+			
 		}
 		if(needToSlowDown && !needToStop){
-			sumForces.x += defaultSpeed/3;
-			//System.out.println("slowed down: ");
+			if(left){
+				sumForces.x -= defaultSpeed/3;
+			}
+			else{
+				sumForces.x += defaultSpeed/3;
+			}
+			
 		}
 		if(needToSpeedUp && !needToStop){
-			sumForces.x += 4*defaultSpeed/3;
-			//System.out.println("speeded up: ");
+			if(left){
+				sumForces.x -= 4*defaultSpeed/3;
+			}
+			else{
+				sumForces.x += 4*defaultSpeed/3;
+			}
+			
 		}
 		if(!needToStop){
+
 			sumForces.addIn(me);
+			
 			cars.getYard().setObjectLocation(this, new Double2D(sumForces));
 			currentPosition = sumForces;
-			//System.out.println("currentPosition: "+currentPosition);
+		//	System.out.println(sumForces + " " + startPosition + " " + currentPosition);
 		}
 	}
 
