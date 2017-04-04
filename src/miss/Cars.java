@@ -31,11 +31,17 @@ public class Cars extends SimState{
 		Double2D point7 = new Double2D(100.0, 50.0);
 		Double2D point8 = new Double2D(100.0, 49.0);
 		
+		Double2D point9 = new Double2D(50.0, 0.0);
+		Double2D point10 = new Double2D(50.0, 50.0);
 		
+		Double2D point11 = new Double2D(50.0, 0.0);
+		Double2D point12 = new Double2D(50.0, 50.0);
 		
 		List<Road> roadsIn = new ArrayList<>();
 		roadsIn.add(new Road(point2, point4, false, true));
 		roadsIn.add(new Road(point1,point3, false, false));
+		roadsIn.add(new Road(point9, point10, true,true));
+		roadsIn.add(new Road(point11, point12, true, false));
 		List<Road> roadOut = new ArrayList<>();
 		roadOut.add(new Road(point6,point8, false, true));
 		roadOut.add(new Road(point5,point7, false, false));
@@ -58,6 +64,17 @@ public class Cars extends SimState{
 				schedule.scheduleRepeating(car);
 			}
 		}
+		
+		for(Road road: crossing.getIn()){
+			for(Car car: road.getCarsOnVerticalRoad()){
+				schedule.scheduleRepeating(car);
+			}
+		}
+		for(Road road: crossing.getOut()){
+			for(Car car: road.getCarsOnVerticalRoad()){
+				schedule.scheduleRepeating(car);
+			}
+		}
 
 	}
 
@@ -70,12 +87,19 @@ public class Cars extends SimState{
 			if(road.getCarsOnRoad().contains(car)){
 				return road;
 			}
+			if(road.getCarsOnVerticalRoad().contains(car)){
+				return road;
+			}
 		}
 		for(Road road: crossing.getOut()){
 			if(road.getCarsOnRoad().contains(car)){
 				return road;
 			}
+			if(road.getCarsOnVerticalRoad().contains(car)){
+				return road;
+			}
 		}
+	
 		return null;
 	}
 

@@ -19,6 +19,7 @@ public class Car implements Steppable{
 	private MersenneTwisterFast random;
 	private double defaultSpeed;
 	boolean left;
+	boolean vertical;
 	
 	public Car(MutableDouble2D startPosition)
 	{
@@ -48,33 +49,66 @@ public class Car implements Steppable{
 		MutableDouble2D sumForces = new MutableDouble2D();
 	
 		//sumForces = startPosition;
-
-		if(!needToSlowDown && !needToSpeedUp && !needToStop){
-			if(left){
-				sumForces.x -= defaultSpeed;
+		if(!vertical){
+			if(!needToSlowDown && !needToSpeedUp && !needToStop){
+				if(left){
+					sumForces.x -= defaultSpeed;
+				}
+				else{
+					sumForces.x += defaultSpeed;
+				}
+				
 			}
-			else{
-				sumForces.x += defaultSpeed;
+			if(needToSlowDown && !needToStop){
+				if(left){
+					sumForces.x -= defaultSpeed/3;
+				}
+				else{
+					sumForces.x += defaultSpeed/3;
+				}
+				
 			}
-			
+			if(needToSpeedUp && !needToStop){
+				if(left){
+					sumForces.x -= 4*defaultSpeed/3;
+				}
+				else{
+					sumForces.x += 4*defaultSpeed/3;
+				}
+				
+			}
 		}
-		if(needToSlowDown && !needToStop){
-			if(left){
-				sumForces.x -= defaultSpeed/3;
+		if(vertical){
+			if(!needToSlowDown && !needToSpeedUp && !needToStop){
+				System.out.println("vertical1");
+				if(left){
+					sumForces.y -= defaultSpeed;
+				}
+				else{
+					sumForces.y += defaultSpeed;
+				}
+				
 			}
-			else{
-				sumForces.x += defaultSpeed/3;
+			if(needToSlowDown && !needToStop){
+				System.out.println("vertical2");
+				if(left){
+					sumForces.y -= defaultSpeed/3;
+				}
+				else{
+					sumForces.y += defaultSpeed/3;
+				}
+				
 			}
-			
-		}
-		if(needToSpeedUp && !needToStop){
-			if(left){
-				sumForces.x -= 4*defaultSpeed/3;
+			if(needToSpeedUp && !needToStop){
+				System.out.println("vertical3");
+				if(left){
+					sumForces.y -= 4*defaultSpeed/3;
+				}
+				else{
+					sumForces.y += 4*defaultSpeed/3;
+				}
+				
 			}
-			else{
-				sumForces.x += 4*defaultSpeed/3;
-			}
-			
 		}
 		if(!needToStop){
 
