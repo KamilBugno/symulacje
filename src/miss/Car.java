@@ -45,10 +45,8 @@ public class Car implements Steppable{
 		}
 		
 		Double2D me = cars.getYard().getObjectLocation(this);
-
 		MutableDouble2D sumForces = new MutableDouble2D();
-	
-		//sumForces = startPosition;
+
 		if(!vertical){
 			if(!needToSlowDown && !needToSpeedUp && !needToStop){
 				if(left){
@@ -80,7 +78,6 @@ public class Car implements Steppable{
 		}
 		if(vertical){
 			if(!needToSlowDown && !needToSpeedUp && !needToStop){
-				System.out.println("vertical1");
 				if(left){
 					sumForces.y -= defaultSpeed;
 				}
@@ -90,7 +87,6 @@ public class Car implements Steppable{
 				
 			}
 			if(needToSlowDown && !needToStop){
-				System.out.println("vertical2");
 				if(left){
 					sumForces.y -= defaultSpeed/3;
 				}
@@ -100,7 +96,6 @@ public class Car implements Steppable{
 				
 			}
 			if(needToSpeedUp && !needToStop){
-				System.out.println("vertical3");
 				if(left){
 					sumForces.y -= 4*defaultSpeed/3;
 				}
@@ -111,12 +106,10 @@ public class Car implements Steppable{
 			}
 		}
 		if(!needToStop){
-
-			sumForces.addIn(me);
-			
+			sumForces.addIn(me);			
 			cars.getYard().setObjectLocation(this, new Double2D(sumForces));
 			currentPosition = sumForces;
-		//	System.out.println(sumForces + " " + startPosition + " " + currentPosition);
+	
 		}
 	}
 
