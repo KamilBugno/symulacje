@@ -53,7 +53,6 @@ public class Road {
 	
 	public void setCarSpeedValues(Car car){
 		double diff = getDiff(car);
-		System.out.println(diff);
 		boolean isOnTheRoad = checkIfIsOnTheRoad(car);
 		setLeft(car, left);
 		setVertical(car, vertical);
