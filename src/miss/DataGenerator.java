@@ -14,19 +14,13 @@ public class DataGenerator {
 
 		array.add(createObject(true, false, 0.0, 49.0, 50.0, 49.0, false, true));
 		array.add(createObject(false, true, 0.0, 50.0, 50.0, 50.0, false, false));
-		array.add(createObject(false, true, 53.0, 50.0, 100.0, 50.0, false, false));
-		
-		array.add(createObject(true, false, 50.0, 0.0, 50.0, 50.0, true, true));
-		
-		
-		
-		array.add(createObject(true, false, 50.0, 0.0, 50.0, 50.0, true, false));
-	
-		
+		array.add(createObject(false, true, 53.0, 50.0, 100.0, 50.0, false, false));		
+		array.add(createObject(true, false, 50.0, 0.0, 50.0, 50.0, true, true));		
+		array.add(createObject(true, false, 50.0, 0.0, 50.0, 50.0, true, false));		
 		JSONObject finalObject = new JSONObject();
 		finalObject.put("values", array);
 		FileWriter file = null;
-		try { //sorry za ścieżkę, ale już mi się nie chciało xd
+		try {
 			file = new FileWriter("/home/ola/workspace/sym/src/miss/dane.txt");
 				file.write(finalObject.toJSONString());
 

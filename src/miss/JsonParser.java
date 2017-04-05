@@ -27,17 +27,13 @@ public class JsonParser {
 			JSONArray values = (JSONArray)jsonObject.get("values");
 			int size = values.size();
 			for(int i = 0; i < size; i++){
-				System.out.println(size);
-	    	
-				JSONObject obj = (JSONObject) values.get(i);
-	    		
+				 JSONObject obj = (JSONObject) values.get(i);	    		
 	    		 boolean in = (boolean) obj.get("in");
-		            boolean out = (boolean) obj.get("out");
-		            JSONArray coordinates = (JSONArray)obj.get("coordinates");
-
-		           boolean vertical = (boolean) obj.get("vertical");
-		           boolean left = (boolean) obj.get("left");
-		           createRoad(roadsIn, roadsOut, in, out, coordinates, vertical, left);
+		         boolean out = (boolean) obj.get("out");
+		         JSONArray coordinates = (JSONArray)obj.get("coordinates");
+		         boolean vertical = (boolean) obj.get("vertical");
+		         boolean left = (boolean) obj.get("left");
+		         createRoad(roadsIn, roadsOut, in, out, coordinates, vertical, left);
 			}
 	    }
 	    public void createRoad(List<Road> roadsIn, List<Road> roadsOut, boolean in, boolean out, JSONArray coordinates, boolean vertical, boolean left){
