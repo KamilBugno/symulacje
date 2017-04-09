@@ -67,18 +67,12 @@ public class Cars extends SimState{
 		yard.clear();
 
 		for(Road road: crossing.getIn()){
-			for(Car car: road.getCarsHorizontalOnRoad()){
-				schedule.scheduleRepeating(car);
-			}
-			for(Car car: road.getCarsOnVerticalRoad()){
+			for(Car car: road.getCarsOnRoad()){
 				schedule.scheduleRepeating(car);
 			}
 		}
 		for(Road road: crossing.getOut()){
-			for(Car car: road.getCarsHorizontalOnRoad()){
-				schedule.scheduleRepeating(car);
-			}
-			for(Car car: road.getCarsOnVerticalRoad()){
+			for(Car car: road.getCarsOnRoad()){
 				schedule.scheduleRepeating(car);
 			}
 		}
@@ -90,18 +84,12 @@ public class Cars extends SimState{
 
 	public Road getRoad(Car car){
 		for(Road road: crossing.getIn()){
-			if(road.getCarsHorizontalOnRoad().contains(car)){
-				return road;
-			}
-			if(road.getCarsOnVerticalRoad().contains(car)){
+			if(road.getCarsOnRoad().contains(car)){
 				return road;
 			}
 		}
 		for(Road road: crossing.getOut()){
-			if(road.getCarsHorizontalOnRoad().contains(car)){
-				return road;
-			}
-			if(road.getCarsOnVerticalRoad().contains(car)){
+			if(road.getCarsOnRoad().contains(car)){
 				return road;
 			}
 		}	
@@ -113,7 +101,7 @@ public class Cars extends SimState{
 		List<Car> cars = new ArrayList<>();
 		for (Road road : roads) {
 			System.out.println(road.toString());
-			cars.addAll(road.getCarsHorizontalOnRoad());
+			cars.addAll(road.getCarsOnRoad());
 		}
 		for (Car car: cars){
 			System.out.println(car.toString());
