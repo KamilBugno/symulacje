@@ -13,7 +13,7 @@ import sim.util.MutableDouble2D;
 
 public class Road {
 
-    private List<Car> carsOnRoad;
+    private List<Car> carsHorizontalOnRoad;
     private List<Car> carsOnVerticalRoad;
     private int yardHeight;
     private int yardWidth;
@@ -26,7 +26,7 @@ public class Road {
     private boolean left;
 
     public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left){
-        carsOnRoad = new ArrayList<>();
+        carsHorizontalOnRoad = new ArrayList<>();
         carsOnVerticalRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
         yardHeight = 100;
@@ -48,7 +48,7 @@ public class Road {
 				createCarsOnHorizontalRoads(left);
 			}
 		}
-		sortListsOfCars(carsOnRoad, carsOnVerticalRoad);
+		sortListsOfCars(carsHorizontalOnRoad, carsOnVerticalRoad, left);
 	}
 	
 	public void setCarSpeedValues(Car car){
@@ -76,8 +76,8 @@ public class Road {
 		
 
 
-    public List<Car> getCarsOnRoad() {
-        return carsOnRoad;
+    public List<Car> getCarsHorizontalOnRoad() {
+        return carsHorizontalOnRoad;
     }
     public List<Car> getCarsOnVerticalRoad() {
         return carsOnVerticalRoad;
@@ -90,7 +90,7 @@ public class Road {
 			position =  new MutableDouble2D(startPoint.x + 3+ (endPoint.x-startPoint.x-6) * random.nextDouble(), startPoint.y);
 		}
 		Car car = new Car(position);
-		carsOnRoad.add(car);
+		carsHorizontalOnRoad.add(car);
     }
     private void createCarsOnVerticalRoads(boolean left){
 		if(left){
@@ -103,21 +103,41 @@ public class Road {
 		carsOnVerticalRoad.add(car);
     }
     
-    private void sortListsOfCars(List<Car> carsOnRoad, List<Car> carsOnVerticalRoad){
-		Collections.sort(carsOnRoad, new Comparator<Car>(){
-			public int compare(Car c1, Car c2){
-				Double c1x = new Double(c1.getCurrentPosition().x);
-				Double c2x = new Double(c2.getCurrentPosition().x);
-				return c2x.compareTo(c1x);
-			}
-		});
-		Collections.sort(carsOnVerticalRoad, new Comparator<Car>(){
-			public int compare(Car c1, Car c2){
-				Double c1y = new Double(c1.getCurrentPosition().y);
-				Double c2y = new Double(c2.getCurrentPosition().y);
-				return c2y.compareTo(c1y);
-			}
-		});		
+    private void sortListsOfCars(List<Car> carsOnHorizontalRoad, List<Car> carsOnVerticalRoad, boolean isLeft){
+		if(!isLeft){
+			Collections.sort(carsOnHorizontalRoad, new Comparator<Car>(){
+				public int compare(Car c1, Car c2){
+					Double c1x = new Double(c1.getCurrentPosition().x);
+					Double c2x = new Double(c2.getCurrentPosition().x);
+					return c2x.compareTo(c1x);
+				}
+			});
+		}else{
+			Collections.sort(carsOnHorizontalRoad, new Comparator<Car>(){
+				public int compare(Car c1, Car c2){
+					Double c1x = new Double(c1.getCurrentPosition().x);
+					Double c2x = new Double(c2.getCurrentPosition().x);
+					return c1x.compareTo(c2x);
+				}
+			});
+		}
+		if(!isLeft){
+			Collections.sort(carsOnVerticalRoad, new Comparator<Car>(){
+				public int compare(Car c1, Car c2){
+					Double c1y = new Double(c1.getCurrentPosition().y);
+					Double c2y = new Double(c2.getCurrentPosition().y);
+					return c2y.compareTo(c1y);
+				}
+			});
+		}else{
+			Collections.sort(carsOnVerticalRoad, new Comparator<Car>(){
+				public int compare(Car c1, Car c2){
+					Double c1y = new Double(c1.getCurrentPosition().y);
+					Double c2y = new Double(c2.getCurrentPosition().y);
+					return c1y.compareTo(c2y);
+				}
+			});
+		}
 	}
     private boolean checkIfIsOnTheRoad(Car car){
     	int index;
@@ -137,9 +157,9 @@ public class Road {
 		        }
 		}
 		else {
-			index = carsOnRoad.indexOf(car);
+			index = carsHorizontalOnRoad.indexOf(car);
 			diff = getDiff(car);
-			 currentPosition = carsOnRoad.get(index).getCurrentPosition().x;
+			 currentPosition = carsHorizontalOnRoad.get(index).getCurrentPosition().x;
 			   if((startPoint.x + 3 < currentPosition) && (currentPosition < (endPoint.x - twilingZone))){
 		            isOnTheRoad = true;
 		        }else{
@@ -162,9 +182,9 @@ public class Road {
 		        }
 		}
 		else {
-			index = carsOnRoad.indexOf(car);
+			index = carsHorizontalOnRoad.indexOf(car);
 			 if (index != 0) {
-		            diff = Math.abs(carsOnRoad.get(index - 1).getCurrentPosition().x - car.getCurrentPosition().x);
+		            diff = Math.abs(carsHorizontalOnRoad.get(index - 1).getCurrentPosition().x - car.getCurrentPosition().x);
 		        }else{
 		            diff = 20;
 		        }
