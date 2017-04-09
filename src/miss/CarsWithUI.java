@@ -6,6 +6,7 @@ import sim.portrayal.simple.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import sim.portrayal.*;
 
 public class CarsWithUI extends GUIState{
 
@@ -41,10 +42,27 @@ public class CarsWithUI extends GUIState{
         g.dispose();
         display.setBackdrop(new TexturePaint(b, new Rectangle(0,0,i.getWidth(null),i.getHeight(null))));
 
-
         Cars cars = (Cars) state;
         yardPortrayal.setField( cars.getYard() );
-        yardPortrayal.setPortrayalForAll(new OvalPortrayal2D());
+        yardPortrayal.setPortrayalForRemainder(new OvalPortrayal2D()
+        {
+            public void draw(Object object, Graphics2D graphics, DrawInfo2D info)
+            {
+                paint = new Color(180);
+                super.draw(object, graphics, info);
+            }
+        });
+        for(Car car : cars.getCarOutRoad()){
+            yardPortrayal.setPortrayalForObject(car, new OvalPortrayal2D()
+            {
+                public void draw(Object object, Graphics2D graphics, DrawInfo2D info)
+                {
+                    paint = new Color(0xFCFF17);
+                    super.draw(object, graphics, info);
+                }
+            });
+        }
+
 
         display.reset();
 
