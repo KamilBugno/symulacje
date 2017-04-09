@@ -12,16 +12,37 @@ public class DataGenerator {
 	public void generate() throws IOException{
 		JSONArray array = new JSONArray();
 
-		array.add(createObject(true, false, 0.0, 49.0, 50.0, 49.0, false, true));
-		array.add(createObject(false, true, 0.0, 50.0, 50.0, 50.0, false, false));
-		array.add(createObject(false, true, 53.0, 50.0, 100.0, 50.0, false, false));		
-		array.add(createObject(true, false, 50.0, 0.0, 50.0, 50.0, true, true));		
-		array.add(createObject(true, false, 50.0, 0.0, 50.0, 50.0, true, false));		
+		array.add(createObject(true, false, 0.0, 49.0, 48.0, 49.0, false, true)); // droga a
+		array.add(createObject(false, true, 0.0, 50.0, 48.0, 50.0, false, false)); // droga a
+		array.add(createObject(true, false, 51.0, 49.0, 75.0, 49.0, false, true)); // droga i
+		array.add(createObject(false, true, 51.0, 50.0, 75.0, 50.0, false, false)); // droga i
+		array.add(createObject(true, false, 77.0, 49.0, 100.0, 49.0, false, true)); // droga h
+		array.add(createObject(false, true, 77.0, 50.0, 100.0, 50.0, false, false)); // droga h
+		array.add(createObject(true, false, 51.0, 21.0, 75.0, 21.0, false, true)); // droga d
+		array.add(createObject(false, true, 51.0, 23.0, 75.0, 23.0, false, false)); // droga d
+		array.add(createObject(true, false, 77.0, 21.0, 100.0, 21.0, false, true)); // droga g
+		array.add(createObject(false, true, 77.0, 23.0, 100.0, 23.0, false, false)); // droga g
+		array.add(createObject(true, false, 52.0, 0.0, 52.0, 20.0, true, true)); // droga c
+		array.add(createObject(false, true, 50.0, 0.0, 50.0, 20.0, true, false)); // droga c
+		array.add(createObject(true, false, 52.0, 21.0, 52.0, 47.0, true, true)); // droga b
+		array.add(createObject(false, true, 50.0, 21.0, 50.0, 47.0, true, false)); // droga b
+		array.add(createObject(true, false, 79.0, 0.0, 79.0, 20.0, true, true)); // droga f
+		array.add(createObject(false, true, 77.0, 0.0, 77.0, 20.0, true, false)); // droga f
+		array.add(createObject(true, false, 79.0, 21.0, 79.0, 47.0, true, true)); // droga e
+		array.add(createObject(false, true, 77.0, 21.0, 77.0, 47.0, true, false)); // droga e
+		array.add(createObject(true, false, 0.0, 73.0, 48.0, 73.0, false, true)); // droga k
+		array.add(createObject(false, true, 0.0, 75.0, 48.0, 75.0, false, false)); // droga k
+		array.add(createObject(true, false, 51.0, 73.0, 100.0, 73.0, false, true)); // droga m
+		array.add(createObject(false, true, 51.0, 75.0, 100.0, 75.0, false, false)); // droga m
+		array.add(createObject(true, false, 52.0, 50.0, 52.0, 70.0, true, true)); // droga j
+		array.add(createObject(false, true, 50.0, 50.0, 50.0, 70.0, true, false)); // droga j
+		array.add(createObject(true, false, 52.0, 73.0, 52.0, 100.0, true, true)); // droga l
+		array.add(createObject(false, true, 50.0, 73.0, 50.0, 100.0, true, false)); // droga l
 		JSONObject finalObject = new JSONObject();
 		finalObject.put("values", array);
 		FileWriter file = null;
 		try {
-			file = new FileWriter("/home/ola/workspace/sym/src/miss/dane.txt");
+			file = new FileWriter("D:\\projekt symulacje\\src\\miss\\dane.txt");
 				file.write(finalObject.toJSONString());
 
 		} catch (IOException e) {

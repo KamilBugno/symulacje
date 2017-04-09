@@ -18,7 +18,7 @@ public class JsonParser {
 	    	Object json = null;
 			try {
 				json = parser.parse(new FileReader(
-				            "/home/ola/workspace/sym/src/miss/dane.txt"));
+				            "D:\\projekt symulacje\\src\\miss\\dane.txt"));
 			} catch (IOException | ParseException e) {
 				
 				e.printStackTrace();

@@ -31,7 +31,7 @@ public class Road {
         random = new MersenneTwisterFast();
         yardHeight = 100;
         yardWidth = 100;
-        numCars = 15;
+        numCars = 3;
         this.vertical = vertical;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
@@ -84,20 +84,20 @@ public class Road {
     }
     private void createCarsOnHorizontalRoads(boolean left){
 		if(left){
-			position =  new MutableDouble2D(startPoint.x + (endPoint.x-startPoint.x) * random.nextDouble(), yardHeight * 0.49);
+			position =  new MutableDouble2D(startPoint.x + 3 + (endPoint.x-startPoint.x-6) * random.nextDouble(), startPoint.y);
 		}
 		if(!left){
-			position =  new MutableDouble2D(startPoint.x + (endPoint.x-startPoint.x) * random.nextDouble(), yardHeight * 0.5);
+			position =  new MutableDouble2D(startPoint.x + 3+ (endPoint.x-startPoint.x-6) * random.nextDouble(), startPoint.y);
 		}
 		Car car = new Car(position);
 		carsOnRoad.add(car);
     }
     private void createCarsOnVerticalRoads(boolean left){
 		if(left){
-			position = new MutableDouble2D(yardWidth*0.51, startPoint.y + (endPoint.y-startPoint.y) * random.nextDouble());
+			position = new MutableDouble2D(startPoint.x, startPoint.y + 3 + (endPoint.y-startPoint.y-6) * random.nextDouble());
 		}
 		else{
-			position = new MutableDouble2D(yardWidth*0.5, startPoint.y + (endPoint.y-startPoint.y) * random.nextDouble());
+			position = new MutableDouble2D(startPoint.x, startPoint.y + 3 + (endPoint.y-startPoint.y-6) * random.nextDouble());
 		}
 		Car car = new Car(position);
 		carsOnVerticalRoad.add(car);
@@ -124,12 +124,12 @@ public class Road {
 		double diff;
 		double currentPosition;
 		boolean isOnTheRoad = false;
-
+		int twilingZone = 0;
 		if(vertical){
 			index = carsOnVerticalRoad.indexOf(car);
 			diff = getDiff(car);
 			 currentPosition = carsOnVerticalRoad.get(index).getCurrentPosition().y;
-			   if((startPoint.y +3 < currentPosition) && (currentPosition < (endPoint.y - 3))){
+			   if((startPoint.y + 3 < currentPosition) && (currentPosition < (endPoint.y - twilingZone))){
 		            isOnTheRoad = true;
 		        }else{
 		            isOnTheRoad = false;
@@ -140,7 +140,7 @@ public class Road {
 			index = carsOnRoad.indexOf(car);
 			diff = getDiff(car);
 			 currentPosition = carsOnRoad.get(index).getCurrentPosition().x;
-			   if((startPoint.x +3 < currentPosition) && (currentPosition < (endPoint.x - 3))){
+			   if((startPoint.x + 3 < currentPosition) && (currentPosition < (endPoint.x - twilingZone))){
 		            isOnTheRoad = true;
 		        }else{
 		            isOnTheRoad = false;
