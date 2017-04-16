@@ -14,6 +14,7 @@ public class Car implements Steppable{
 	private boolean needToSlowDown;
 	private boolean needToStop;
 	private boolean needToSpeedUp;
+	private boolean needToChangeRoad;
 	private boolean isInitialStep = true;
 	private double speed;
 	private MersenneTwisterFast random;
@@ -129,6 +130,10 @@ public class Car implements Steppable{
 
 	public void setNeedToStop(boolean needToStop) {
 		this.needToStop = needToStop;
+	}
+	
+	public void setNeedToChangeRoad(boolean needToChangeRoad){
+		this.needToChangeRoad = needToChangeRoad;
 	}
 
 }
