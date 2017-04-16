@@ -67,16 +67,16 @@ public class Cars extends SimState{
 		}	
 		return null;
 	}
+	
+	public List<Road> getRoadsOut(){
+		return crossing.getOut();
+	}
 
 	public List<Car> getCarOutRoad(){
 		List<Road> roads = crossing.getOut();
 		List<Car> cars = new ArrayList<>();
 		for (Road road : roads) {
-			System.out.println(road.toString());
 			cars.addAll(road.getCarsOnRoad());
-		}
-		for (Car car: cars){
-			System.out.println(car.toString());
 		}
 		return cars;
 	}
