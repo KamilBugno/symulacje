@@ -65,11 +65,25 @@ public class Road {
             car.setNeedToSpeedUp(false);
             car.setNeedToStop(false);
         }
+        if(checkIfNeedToChangeRoad(car)){
+        	car.setNeedToChangeRoad(true);
+        }
     }
 
     public List<Car> getCarsOnRoad() {
         return carsOnRoad;
     }
+    
+    private boolean checkIfNeedToChangeRoad(Car car){    	
+    	double diff = getDiff(car);    	
+    	if(carsOnRoad.indexOf(car) == 0){
+    		if( diff <= 1 || !checkIfIsOnTheRoad(car)){    			
+    			return true;
+    		}
+    	}    	
+    	return false;
+    }
+    
     private void createCarsOnRoads(boolean left){
 		if(vertical){
 			if(left){
