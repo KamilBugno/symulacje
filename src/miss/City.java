@@ -5,7 +5,7 @@ import java.util.List;
 
 public class City {
 
-	public List<Crossing> crossings = new ArrayList<Crossing>();
+	private List<Crossing> crossings = new ArrayList<Crossing>();
 	private static final City instance = new City();
 	private City(){		
 	}
@@ -14,6 +14,9 @@ public class City {
 	}
 	public void addCrossing(Crossing crossing){
 		crossings.add(crossing);
+	}
+	public List<Crossing> getCrossings(){
+		return crossings;
 	}
 	// tak sobie mysle, że lepszym pomysłem było trzymanie tego jako grafu,
 	// bo jeżeli będziemy chcieli szukać jakiejś drogi z punktu A do punktu B 

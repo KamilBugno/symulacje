@@ -11,7 +11,9 @@ import java.util.List;
 public class Cars extends SimState{
 
 	private Continuous2D yard;
-	private Crossing crossing;
+	//private Crossing crossing;
+	private City city = City.getInstance();
+	private List<Crossing> cityCrossings = city.getCrossings();
 
 	//do pomyslenia: co bedziemy tutaj przechowywac - skrzyzowania, ulice, czy jeszcze inna strukture?
 
@@ -25,13 +27,9 @@ public class Cars extends SimState{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		List<Road> roadsIn = new ArrayList<>();
-		List<Road> roadsOut = new ArrayList<>();
-
 		JsonParser parser = new JsonParser();
 		List<Crossing> crossings = parser.parseAndCreate();
-		crossing = crossings.get(0);
-		City city = City.getInstance();
+	//	crossing = crossings.get(0);
 		for(Crossing crossing: crossings){
 			city.addCrossing(crossing);
 		}
@@ -41,15 +39,16 @@ public class Cars extends SimState{
 	public void start(){
 		super.start();
 		yard.clear();
-
-		for(Road road: crossing.getIn()){
-			for(Car car: road.getCarsOnRoad()){
-				schedule.scheduleRepeating(car);
+		for(Crossing crossing: cityCrossings){
+			for(Road road: crossing.getIn()){
+				for(Car car: road.getCarsOnRoad()){
+					schedule.scheduleRepeating(car);
+				}
 			}
-		}
-		for(Road road: crossing.getOut()){
-			for(Car car: road.getCarsOnRoad()){
-				schedule.scheduleRepeating(car);
+			for(Road road: crossing.getOut()){
+				for(Car car: road.getCarsOnRoad()){
+					schedule.scheduleRepeating(car);
+				}
 			}
 		}
 	}
@@ -59,25 +58,37 @@ public class Cars extends SimState{
 	}
 
 	public Road getRoad(Car car){
-		for(Road road: crossing.getIn()){
-			if(road.getCarsOnRoad().contains(car)){
-				return road;
+		for(Crossing crossing: cityCrossings){
+			for(Road road: crossing.getIn()){
+				if(road.getCarsOnRoad().contains(car)){
+					return road;
+				}
+			}
+			for(Road road: crossing.getOut()){
+				if(road.getCarsOnRoad().contains(car)){
+					return road;
+				}
 			}
 		}
-		for(Road road: crossing.getOut()){
-			if(road.getCarsOnRoad().contains(car)){
-				return road;
+			return null;
+		
+	}
+	public List<Road> getRoadsOut( Crossing c){
+		for(Crossing crossing: cityCrossings){
+			if(crossing.equals(c)){
+				return crossing.getOut();
 			}
-		}	
-		return null;
-	}
+		}
+			return null;
 	
-	public List<Road> getRoadsOut(){
-		return crossing.getOut();
 	}
-
 	public List<Car> getCarOutRoad(){
-		List<Road> roads = crossing.getOut();
+		List<Road> roads = new ArrayList<Road>();
+		List<Road> out = new ArrayList<Road>();
+		for(Crossing crossing: cityCrossings){
+			out = crossing.getOut();
+			roads.addAll(out);
+		}
 		List<Car> cars = new ArrayList<>();
 		for (Road road : roads) {
 			cars.addAll(road.getCarsOnRoad());
