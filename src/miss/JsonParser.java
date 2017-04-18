@@ -86,27 +86,17 @@ public class JsonParser {
 	    }
 	    
 	    private void createCrossings(int crossingsSize){
-	    	Crossing c = new Crossing(new ArrayList<>(), new ArrayList<>());
-	    	crossings = new ArrayList<Crossing>(Collections.nCopies(crossingsSize, c));
-	    	System.out.println("crossingsSize: " + crossingsSize);
+	    	crossings = new ArrayList<Crossing>();
 	    	Crossing crossing = null;
-	    	List<Road> roads = new ArrayList<Road>();
-	    	for(Integer key: roadsIn.keySet()){
-	    		System.out.println("size of keyset " + roadsIn.keySet().size());
-	    		roads = (List<Road>) roadsIn.get(key);
-	    		crossing = crossings.get(key);
-	    		crossings.remove(key);
-	    		for(Road road: roads){
-	    			crossing.addIn(road);
-	    		}
+	    	List<Road> in = new ArrayList<Road>();
+	    	List<Road> out = new ArrayList<Road>();
+	    	
+	    	for(int i = 0; i < crossingsSize; i++){
+	    		in = (List<Road>) roadsIn.get(i);
+	    		out = (List<Road>) roadsOut.get(i);
+	    		crossing = new Crossing(in, out);
+	    		crossings.add(crossing);
 	    	}
-	       	for(Integer key: roadsOut.keySet()){
-	    		roads = (List<Road>) roadsOut.get(key);
-	    		crossing = crossings.get(key);
-	    		crossings.remove(key);
-	    		for(Road road: roads){
-	    			crossing.addOut(road);
-	    		}
-	    	}
+
 	    }
 	}

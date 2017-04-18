@@ -30,7 +30,7 @@ public class Cars extends SimState{
 
 		JsonParser parser = new JsonParser();
 		List<Crossing> crossings = parser.parseAndCreate();
-		System.out.println(crossings.size());
+		crossing = crossings.get(0);
 //		crossing = new Crossing(roadsIn,roadsOut);
 //		City city = City.getInstance();
 //		city.crossings.add(crossing);
