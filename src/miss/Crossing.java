@@ -22,5 +22,11 @@ public class Crossing {
 	public List<Road> getOut() {
 		return out;
 	}
+	public void addIn(Road roadIn){
+		in.add(roadIn);
+	}
+	public void addOut(Road roadOut){
+		out.add(roadOut);
+	}
 
 }
