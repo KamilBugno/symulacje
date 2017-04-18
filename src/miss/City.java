@@ -12,6 +12,9 @@ public class City {
 	public static City getInstance(){
 		return instance;
 	}
+	public void addCrossing(Crossing crossing){
+		crossings.add(crossing);
+	}
 	// tak sobie mysle, że lepszym pomysłem było trzymanie tego jako grafu,
 	// bo jeżeli będziemy chcieli szukać jakiejś drogi z punktu A do punktu B 
 	// to znalezienie drogi na grafie będzie proste, ale myślę, że to można spokojnie
