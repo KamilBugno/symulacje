@@ -7,8 +7,7 @@ public class City {
 
 	public List<Crossing> crossings = new ArrayList<Crossing>();
 	private static final City instance = new City();
-	private City(){
-		
+	private City(){		
 	}
 	public static City getInstance(){
 		return instance;

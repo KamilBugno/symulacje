@@ -2,8 +2,12 @@ package miss;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,11 +15,27 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import sim.util.Double2D;
-public class JsonParser {	  
+
+
+
+public class JsonParser {	
+	
+	private int crossingsSize;
+	private Map<Integer, List<Road>> roadsIn = new HashMap<Integer, List<Road>>();
+	private Map<Integer, List<Road>> roadsOut = new HashMap<Integer, List<Road>>();
+	List<Crossing> crossings = new ArrayList<Crossing>();
+	
+	public List<Crossing> parseAndCreate(){
+		int crossingSize = parseAndCreateRoads();
+		createCrossings(crossingSize);
+		return crossings;
+	}
+	
 	    @SuppressWarnings({ "unchecked", "static-access" })
-		public void parseAndCreate(List<Road> roadsIn, List<Road> roadsOut) {
+		private int parseAndCreateRoads() {
 	    	JSONParser parser = new JSONParser();
 	    	Object json = null;
+	    	int crossingsSize = 0;
 			try {
 				json = parser.parse(new FileReader(
 				            "D:\\projekt symulacje\\src\\miss\\dane.txt"));
@@ -27,23 +47,66 @@ public class JsonParser {
 			JSONArray values = (JSONArray)jsonObject.get("values");
 			int size = values.size();
 			for(int i = 0; i < size; i++){
-				 JSONObject obj = (JSONObject) values.get(i);	    		
+				 JSONObject obj = (JSONObject) values.get(i);	
+				 int crossingId = ((Long) obj.get("crossingId")).intValue();
+				 if(crossingsSize < crossingId){
+					 crossingsSize = crossingId;
+				 }
 	    		 boolean in = (boolean) obj.get("in");
 		         boolean out = (boolean) obj.get("out");
 		         JSONArray coordinates = (JSONArray)obj.get("coordinates");
 		         boolean vertical = (boolean) obj.get("vertical");
-		         boolean left = (boolean) obj.get("left");
-		         createRoad(roadsIn, roadsOut, in, out, coordinates, vertical, left);
+		         boolean left = (boolean) obj.get("left");		         
+		         createRoad(crossingId,in, out, coordinates, vertical, left);
+		         
 			}
+			
+			return crossingsSize + 1;
 	    }
-	    public void createRoad(List<Road> roadsIn, List<Road> roadsOut, boolean in, boolean out, JSONArray coordinates, boolean vertical, boolean left){
+	    private void createRoad(int crossingId, boolean in, boolean out, JSONArray coordinates, boolean vertical, boolean left){
+	    	Road road = new Road(new Double2D((Double)coordinates.get(0), (Double)coordinates.get(1)), 
+    				new Double2D((Double)coordinates.get(2), (Double)coordinates.get(3)), vertical, left);
+	    	List<Road> roads = new ArrayList<Road>();
 	    	if(in){
-	    		roadsIn.add(new Road(new Double2D((Double)coordinates.get(0), (Double)coordinates.get(1)), 
-	    				new Double2D((Double)coordinates.get(2), (Double)coordinates.get(3)), vertical, left));
+	    		roads = roadsIn.get(crossingId);
+	    		if(roads == null){
+	    			roads = new ArrayList<Road>();
+	    		}
+	    		roads.add(road);
+	    		roadsIn.put(crossingId, roads);
 	    	}
 	    	if(out){
-	    		roadsOut.add(new Road(new Double2D((Double)coordinates.get(0), (Double)coordinates.get(1)), 
-	    				new Double2D((Double)coordinates.get(2), (Double)coordinates.get(3)), vertical, left));
+	    		roads = roadsOut.get(crossingId);
+	    		if(roads == null){
+	    			roads = new ArrayList<Road>();
+	    		}
+	    		roads.add(road);
+	    		roadsOut.put(crossingId, roads);
+	    	}
+	    }
+	    
+	    private void createCrossings(int crossingsSize){
+	    	Crossing c = new Crossing(new ArrayList<>(), new ArrayList<>());
+	    	crossings = new ArrayList<Crossing>(Collections.nCopies(crossingsSize, c));
+	    	System.out.println("crossingsSize: " + crossingsSize);
+	    	Crossing crossing = null;
+	    	List<Road> roads = new ArrayList<Road>();
+	    	for(Integer key: roadsIn.keySet()){
+	    		System.out.println("size of keyset " + roadsIn.keySet().size());
+	    		roads = (List<Road>) roadsIn.get(key);
+	    		crossing = crossings.get(key);
+	    		crossings.remove(key);
+	    		for(Road road: roads){
+	    			crossing.addIn(road);
+	    		}
+	    	}
+	       	for(Integer key: roadsOut.keySet()){
+	    		roads = (List<Road>) roadsOut.get(key);
+	    		crossing = crossings.get(key);
+	    		crossings.remove(key);
+	    		for(Road road: roads){
+	    			crossing.addOut(road);
+	    		}
 	    	}
 	    }
 	}
