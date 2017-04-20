@@ -20,7 +20,6 @@ import sim.util.Double2D;
 
 public class JsonParser {	
 	
-	private int crossingsSize;
 	private Map<Integer, List<Road>> roadsIn = new HashMap<Integer, List<Road>>();
 	private Map<Integer, List<Road>> roadsOut = new HashMap<Integer, List<Road>>();
 	List<Crossing> crossings = new ArrayList<Crossing>();

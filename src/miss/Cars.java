@@ -11,11 +11,8 @@ import java.util.List;
 public class Cars extends SimState{
 
 	private Continuous2D yard;
-	//private Crossing crossing;
 	private City city = City.getInstance();
 	private List<Crossing> cityCrossings = city.getCrossings();
-
-	//do pomyslenia: co bedziemy tutaj przechowywac - skrzyzowania, ulice, czy jeszcze inna strukture?
 
 	public Cars(long seed) {
 		super(seed);
@@ -29,7 +26,6 @@ public class Cars extends SimState{
 		}
 		JsonParser parser = new JsonParser();
 		List<Crossing> crossings = parser.parseAndCreate();
-	//	crossing = crossings.get(0);
 		for(Crossing crossing: crossings){
 			city.addCrossing(crossing);
 		}

@@ -5,7 +5,9 @@ package miss;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import ec.util.MersenneTwisterFast;
 import sim.util.Double2D;
@@ -23,6 +25,8 @@ public class Road {
     Double2D endPoint;
     private boolean vertical;
     private boolean left;
+    private City city = City.getInstance();
+    private List<Crossing> cityCrossings = city.getCrossings();
 
     public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left){
 		carsOnRoad = new ArrayList<>();
@@ -54,7 +58,8 @@ public class Road {
             car.setNeedToStop(false);
         }
         else if(diff <= 1 || !isOnTheRoad){
-            car.setNeedToStop(true);
+        	 car.setNeedToStop(true);
+        	 //TU BYŁABY ZMIANA DROGI
         }
         else if( diff > 15 && isOnTheRoad){
             car.setNeedToSpeedUp(true);
@@ -65,13 +70,37 @@ public class Road {
             car.setNeedToSpeedUp(false);
             car.setNeedToStop(false);
         }
-        if(checkIfNeedToChangeRoad(car)){
-        	car.setNeedToChangeRoad(true);
-        }
-    }
+     }
 
     public List<Car> getCarsOnRoad() {
         return carsOnRoad;
+    } 
+    
+    public void changeRoad(Car car){
+    	Crossing crossing = new Crossing(new ArrayList<>(), new ArrayList<>());
+    	List<Road> roadsIn = null; 
+    	Iterator<Crossing> iterator = cityCrossings.iterator();
+    	while(iterator.hasNext()){
+    		Crossing c = iterator.next();
+    		roadsIn = c.getIn();
+    		for(Road road: roadsIn){
+	    		if(road.carsOnRoad.contains(car)){
+	    			System.out.println("contains");
+	    			crossing = c;
+	    			iterator.remove();
+	    		}
+    		}
+    	}
+    	carsOnRoad.remove(car);
+    	List<Road> roadsOut = crossing.getOut();
+    	int size = roadsOut.size();
+    	Random rand = new Random();
+    	System.out.println("size: " + size );
+    	int index = rand.nextInt(size);
+    	System.out.println("index: " + index );
+    	roadsOut.get(index).carsOnRoad.add(car);
+    	crossing = new Crossing(roadsIn, roadsOut);
+    	cityCrossings.add(crossing);
     }
     
     private boolean checkIfNeedToChangeRoad(Car car){    	

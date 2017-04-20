@@ -62,11 +62,7 @@ public class CarsWithUI extends GUIState{
                 }
             });
         }
-
-
         display.reset();
-
-
         display.repaint();
     }
     public void init(Controller c)

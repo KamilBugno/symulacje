@@ -8,7 +8,6 @@ public class Crossing {
 
 	private List<Road> in = new ArrayList<Road>();
 	private List<Road> out = new ArrayList<Road>();
-	// do pomyslenia: jak bedziemy rozdzielac drogi pionowe od poziomych?
 
 	public Crossing(List<Road> in, List<Road> out){
 		this.in = in;

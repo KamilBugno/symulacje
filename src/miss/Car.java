@@ -40,6 +40,9 @@ public class Car implements Steppable{
 	
 		cars = (Cars) state;
 		cars.getRoad(this).setCarSpeedValues(this);
+		Road road = cars.getRoad(this);
+		road.setCarSpeedValues(this);
+	//	road.changeRoad(this);
 		if(isInitialStep){
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));
 			isInitialStep = false;
