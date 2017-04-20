@@ -39,9 +39,15 @@ public class Car implements Steppable{
 	public void step(SimState state) {
 	
 		cars = (Cars) state;
+		if(cars == null){
+			System.out.println("cars");
+		}
+		if(cars.getRoad(this) == null){
+			System.out.println("cars.getRoad");
+		}
 		cars.getRoad(this).setCarSpeedValues(this);
-		Road road = cars.getRoad(this);
-		road.setCarSpeedValues(this);
+		//Road road = cars.getRoad(this);
+		//road.setCarSpeedValues(this);
 	//	road.changeRoad(this);
 		if(isInitialStep){
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));

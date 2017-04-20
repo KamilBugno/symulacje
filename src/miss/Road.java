@@ -33,7 +33,7 @@ public class Road {
         random = new MersenneTwisterFast();
         yardHeight = 100;
         yardWidth = 100;
-        numCars = 5;
+        numCars = 1;
         this.vertical = vertical;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
@@ -58,8 +58,10 @@ public class Road {
             car.setNeedToStop(false);
         }
         else if(diff <= 1 || !isOnTheRoad){
-        	 car.setNeedToStop(true);
-        	 //TU BYŁABY ZMIANA DROGI
+        	// car.setNeedToStop(true);
+        	 if(checkIfNeedToChangeRoad(car)){
+        		 changeRoad(car);
+        	 }
         }
         else if( diff > 15 && isOnTheRoad){
             car.setNeedToSpeedUp(true);
@@ -70,6 +72,7 @@ public class Road {
             car.setNeedToSpeedUp(false);
             car.setNeedToStop(false);
         }
+        
      }
 
     public List<Car> getCarsOnRoad() {
@@ -98,9 +101,12 @@ public class Road {
     	System.out.println("size: " + size );
     	int index = rand.nextInt(size);
     	System.out.println("index: " + index );
-    	roadsOut.get(index).carsOnRoad.add(car);
+    	boolean added = roadsOut.get(index).carsOnRoad.add(car);
+    	System.out.println("added: " + added);
+    	
     	crossing = new Crossing(roadsIn, roadsOut);
-    	cityCrossings.add(crossing);
+    	added = cityCrossings.add(crossing);
+    	System.out.println("added1: " + added);
     }
     
     private boolean checkIfNeedToChangeRoad(Car car){    	
