@@ -56,20 +56,27 @@ public class JsonParser {
 		         JSONArray coordinates = (JSONArray)obj.get("coordinates");
 		         boolean vertical = (boolean) obj.get("vertical");
 		         boolean left = (boolean) obj.get("left");		         
-		         createRoad(crossingId,in, out, coordinates, vertical, left);
+		         createRoad(crossingId,in, out, coordinates, vertical, left, ((Long) obj.get("roadId")).intValue());
 		         
 			}
 			
 			return crossingsSize + 1;
 	    }
-	    private void createRoad(int crossingId, boolean in, boolean out, JSONArray coordinates, boolean vertical, boolean left){
+	    private void createRoad(int crossingId, boolean in, boolean out, JSONArray coordinates, boolean vertical, boolean left, int roadId){
 	    	Road road = new Road(new Double2D((Double)coordinates.get(0), (Double)coordinates.get(1)), 
-    				new Double2D((Double)coordinates.get(2), (Double)coordinates.get(3)), vertical, left);
-	    	List<Road> roads = new ArrayList<Road>();
+    				new Double2D((Double)coordinates.get(2), (Double)coordinates.get(3)), vertical, left, roadId);
+
+//			if(crossingId == 4 && in && !out && vertical && !left ){
+//				System.out.println("DANE: "+(Double)coordinates.get(0)+" "+(Double)coordinates.get(1)+" "+
+//						(Double)coordinates.get(2)+" "+(Double)coordinates.get(3)+", roadId: "+ road.getId());
+//				road.createCars(road.isLeft(), road.isVertical());
+//			} // tworzenie tylko jednego auta - nie kasowac
+
+			List<Road> roads;
 	    	if(in){
 	    		roads = roadsIn.get(crossingId);
 	    		if(roads == null){
-	    			roads = new ArrayList<Road>();
+	    			roads = new ArrayList<>();
 	    		}
 	    		roads.add(road);
 	    		roadsIn.put(crossingId, roads);
@@ -77,7 +84,7 @@ public class JsonParser {
 	    	if(out){
 	    		roads = roadsOut.get(crossingId);
 	    		if(roads == null){
-	    			roads = new ArrayList<Road>();
+	    			roads = new ArrayList<>();
 	    		}
 	    		roads.add(road);
 	    		roadsOut.put(crossingId, roads);
@@ -85,14 +92,13 @@ public class JsonParser {
 	    }
 	    
 	    private void createCrossings(int crossingsSize){
-	    	crossings = new ArrayList<Crossing>();
-	    	Crossing crossing = null;
-	    	List<Road> in = new ArrayList<Road>();
-	    	List<Road> out = new ArrayList<Road>();
+	    	Crossing crossing;
+	    	List<Road> in;
+	    	List<Road> out;
 	    	
 	    	for(int i = 0; i < crossingsSize; i++){
-	    		in = (List<Road>) roadsIn.get(i);
-	    		out = (List<Road>) roadsOut.get(i);
+	    		in =  roadsIn.get(i);
+	    		out = roadsOut.get(i);
 	    		crossing = new Crossing(in, out);
 	    		crossings.add(crossing);
 	    	}

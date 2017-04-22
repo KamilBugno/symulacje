@@ -14,30 +14,27 @@ import sim.util.Double2D;
 import sim.util.MutableDouble2D;
 
 public class Road {
-
+    private int id;
     private List<Car> carsOnRoad;
-    private int yardHeight;
-    private int yardWidth;
     private int numCars;
     private MutableDouble2D position;
     private MersenneTwisterFast random;
     Double2D startPoint;
     Double2D endPoint;
     private boolean vertical;
-    private boolean left;
+	private boolean left;
     private City city = City.getInstance();
     private List<Crossing> cityCrossings = city.getCrossings();
 
-    public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left){
+    public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left, int id){
 		carsOnRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
-        yardHeight = 100;
-        yardWidth = 100;
         numCars = 1;
         this.vertical = vertical;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.left = left;
+		this.id = id;
         createCars(left, vertical);
     }
 	
@@ -58,7 +55,6 @@ public class Road {
             car.setNeedToStop(false);
         }
         else if(diff <= 1 || !isOnTheRoad){
-        	// car.setNeedToStop(true);
         	 if(checkIfNeedToChangeRoad(car)){
         		 changeRoad(car);
         	 }
@@ -80,33 +76,63 @@ public class Road {
     } 
     
     public void changeRoad(Car car){
-    	Crossing crossing = new Crossing(new ArrayList<>(), new ArrayList<>());
-    	List<Road> roadsIn = null; 
-    	Iterator<Crossing> iterator = cityCrossings.iterator();
-    	while(iterator.hasNext()){
-    		Crossing c = iterator.next();
-    		roadsIn = c.getIn();
-    		for(Road road: roadsIn){
-	    		if(road.carsOnRoad.contains(car)){
-	    			System.out.println("contains");
-	    			crossing = c;
-	    			iterator.remove();
-	    		}
-    		}
-    	}
-    	carsOnRoad.remove(car);
-    	List<Road> roadsOut = crossing.getOut();
-    	int size = roadsOut.size();
-    	Random rand = new Random();
-    	System.out.println("size: " + size );
-    	int index = rand.nextInt(size);
-    	System.out.println("index: " + index );
-    	boolean added = roadsOut.get(index).carsOnRoad.add(car);
-    	System.out.println("added: " + added);
-    	
-    	crossing = new Crossing(roadsIn, roadsOut);
-    	added = cityCrossings.add(crossing);
-    	System.out.println("added1: " + added);
+		Road road = car.getCars().getRoad(car); //pobieram droge na ktorej znajduje sie auto
+		if(road == null){
+			System.out.println("Road jest nullem");
+		}
+
+		for(Crossing crossing : cityCrossings){
+
+			if(crossing.getIn().contains(road)){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
+				if(road !=null){
+					road.carsOnRoad.remove(car); //usuwam auto z tej drogi
+				}
+
+				int size = crossing.getOut().size(); //drogi wyjazdowe ze skrzyzowania
+
+				Random rand = new Random();
+				int index = rand.nextInt(size);
+				Road finalRoad = crossing.getOut().get(index);
+				finalRoad.carsOnRoad.add(car); //dodanie auta do odpowiedniej drogi
+
+				if(finalRoad.startPoint.getX() > (car.getCurrentPosition().getX()-5)
+						&& finalRoad.startPoint.getX() < (car.getCurrentPosition().getX()+5)
+						&& finalRoad.startPoint.getY() > (car.getCurrentPosition().getY()-5)
+						&& finalRoad.startPoint.getY() < (car.getCurrentPosition().getY()+5)){
+					//wyzej: sprawdzanie gdzie ma zostać dopisane auto - bufor kwadratowy 5x5
+
+                    //ponizej: obliczenie nowej pozycji auta w zaleznosci od parametrow drogi
+                    if(car.getCars().getRoad(car).isLeft() && !car.getCars().getRoad(car).isVertical()){
+                        car.setCurrentPosition(new MutableDouble2D(finalRoad.startPoint.getX()-5, finalRoad.startPoint.getY()));
+                    }
+                    else if(!car.getCars().getRoad(car).isLeft() && !car.getCars().getRoad(car).isVertical()){
+                        car.setCurrentPosition(new MutableDouble2D(finalRoad.startPoint.getX()+5, finalRoad.startPoint.getY()));
+                    }
+                    else if(!car.getCars().getRoad(car).isLeft() && car.getCars().getRoad(car).isVertical()){
+                        car.setCurrentPosition(new MutableDouble2D(finalRoad.startPoint.getX(), finalRoad.startPoint.getY()+5));
+                    }
+                    else if(car.getCars().getRoad(car).isLeft() && car.getCars().getRoad(car).isVertical()){
+                        car.setCurrentPosition(new MutableDouble2D(finalRoad.startPoint.getX(), finalRoad.startPoint.getY()-5));
+                    }
+				} else{
+                    if(car.getCars().getRoad(car).isLeft() && !car.getCars().getRoad(car).isVertical()){
+                        car.setCurrentPosition(new MutableDouble2D(finalRoad.endPoint.getX()-5, finalRoad.endPoint.getY()));
+                    }
+                    else if(!car.getCars().getRoad(car).isLeft() && !car.getCars().getRoad(car).isVertical()){
+                        car.setCurrentPosition(new MutableDouble2D(finalRoad.endPoint.getX()+5, finalRoad.endPoint.getY()));
+                    }
+                    else if(!car.getCars().getRoad(car).isLeft() && car.getCars().getRoad(car).isVertical()){
+                        car.setCurrentPosition(new MutableDouble2D(finalRoad.endPoint.getX(), finalRoad.endPoint.getY()+5));
+                    }
+                    else if(car.getCars().getRoad(car).isLeft() && car.getCars().getRoad(car).isVertical()){
+                        car.setCurrentPosition(new MutableDouble2D(finalRoad.endPoint.getX(), finalRoad.endPoint.getY()-5));
+                    }
+				}
+                car.setNeedToStop(false);
+
+
+			}
+		}
     }
     
     private boolean checkIfNeedToChangeRoad(Car car){    	
@@ -120,7 +146,7 @@ public class Road {
     }
     
     private void createCarsOnRoads(boolean left){
-		if(vertical){
+        if(vertical){
 			if(left){
 				position = new MutableDouble2D(startPoint.x, startPoint.y + 3 + (endPoint.y-startPoint.y-6) * random.nextDouble());
 			}
@@ -232,11 +258,29 @@ public class Road {
 		return diff;
     }
     private void setVertical(Car car, boolean vertical){
-    	car.vertical = vertical;
+    	car.setVertical(vertical);
     }
     private void setLeft(Car car, boolean left){
-    	car.left = left;
+    	car.setLeft(left);
     }
+
+
+	public boolean isLeft() {
+		return left;
+	}
+
+	public boolean isVertical() {
+		return vertical;
+	}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }
 	
 

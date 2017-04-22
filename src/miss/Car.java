@@ -19,8 +19,8 @@ public class Car implements Steppable{
 	private double speed;
 	private MersenneTwisterFast random;
 	private double defaultSpeed;
-	boolean left;
-	boolean vertical;
+	private boolean left;
+	private boolean vertical;
 	
 	public Car(MutableDouble2D startPosition)
 	{
@@ -37,18 +37,10 @@ public class Car implements Steppable{
 
 	@Override
 	public void step(SimState state) {
-	
+
 		cars = (Cars) state;
-		if(cars == null){
-			System.out.println("cars");
-		}
-		if(cars.getRoad(this) == null){
-			System.out.println("cars.getRoad");
-		}
 		cars.getRoad(this).setCarSpeedValues(this);
-		//Road road = cars.getRoad(this);
-		//road.setCarSpeedValues(this);
-	//	road.changeRoad(this);
+
 		if(isInitialStep){
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));
 			isInitialStep = false;
@@ -116,22 +108,16 @@ public class Car implements Steppable{
 			}
 		}
 		if(!needToStop){
-			sumForces.addIn(me);			
+			sumForces.addIn(currentPosition);
 			cars.getYard().setObjectLocation(this, new Double2D(sumForces));
 			currentPosition = sumForces;
 	
 		}
 	}
 
-	public MutableDouble2D getCurrentPosition() {
-		return currentPosition;
-	}
-
-
 	public void setNeedToSlowDown(boolean needToSlowDown) {
 		this.needToSlowDown = needToSlowDown;
 	}
-
 
 	public void setNeedToSpeedUp(boolean needToSpeedUp) {
 		this.needToSpeedUp = needToSpeedUp;
@@ -143,6 +129,40 @@ public class Car implements Steppable{
 	
 	public void setNeedToChangeRoad(boolean needToChangeRoad){
 		this.needToChangeRoad = needToChangeRoad;
+	}
+
+	public Cars getCars() {
+		return cars;
+	}
+	public boolean isLeft() {
+		return left;
+	}
+
+	public void setLeft(boolean left) {
+		this.left = left;
+	}
+
+	public boolean isVertical() {
+		return vertical;
+	}
+	public void setVertical(boolean vertical) {
+		this.vertical = vertical;
+	}
+
+	public MutableDouble2D getStartPosition() {
+		return startPosition;
+	}
+
+	public void setStartPosition(MutableDouble2D startPosition) {
+		this.startPosition = startPosition;
+	}
+
+	public void setCurrentPosition(MutableDouble2D currentPosition) {
+		this.currentPosition = currentPosition;
+	}
+
+	public MutableDouble2D getCurrentPosition() {
+		return currentPosition;
 	}
 
 }
