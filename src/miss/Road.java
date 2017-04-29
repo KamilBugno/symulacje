@@ -24,7 +24,7 @@ public class Road {
     private boolean vertical;
 	private boolean left;
     private City city = City.getInstance();
-    private List<Crossing> cityCrossings = city.getCrossings();
+	private List<Crossing> cityCrossings = city.getCrossings();
 
     public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left, int id){
 		carsOnRoad = new ArrayList<>();
@@ -56,7 +56,9 @@ public class Road {
         }
         else if(diff <= 1 || !isOnTheRoad){
         	 if(checkIfNeedToChangeRoad(car)){
-        		 changeRoad(car);
+        		 if(changeRoad(car)){
+					 car.getCarStatistics().addCrossings();
+				 }
         	 }
         }
         else if( diff > 15 && isOnTheRoad){
@@ -73,17 +75,18 @@ public class Road {
 
     public List<Car> getCarsOnRoad() {
         return carsOnRoad;
-    } 
-    
-    public void changeRoad(Car car){
+    }
+
+    public boolean changeRoad(Car car){
 		Road road = car.getCars().getRoad(car); //pobieram droge na ktorej znajduje sie auto
 		if(road == null){
 			System.out.println("Road jest nullem");
 		}
-
+		boolean isThereCrossing = false;
 		for(Crossing crossing : cityCrossings){
 
 			if(crossing.getIn().contains(road)){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
+				isThereCrossing = true;
 				if(road !=null){
 					road.carsOnRoad.remove(car); //usuwam auto z tej drogi
 				}
@@ -133,6 +136,7 @@ public class Road {
 
 			}
 		}
+		return isThereCrossing;
     }
     
     private boolean checkIfNeedToChangeRoad(Car car){    	
@@ -205,6 +209,11 @@ public class Road {
 			});
 		}
 	}
+
+	public List<Crossing> getCityCrossings() {
+		return cityCrossings;
+	}
+
     private boolean checkIfIsOnTheRoad(Car car){
     	int index;
 		double diff;
