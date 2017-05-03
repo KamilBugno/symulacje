@@ -48,6 +48,7 @@ public class JsonParser {
 			for(int i = 0; i < size; i++){
 				 JSONObject obj = (JSONObject) values.get(i);	
 				 int crossingId = ((Long) obj.get("crossingId")).intValue();
+				 int secondCrossingId = ((Long) obj.get("secondCrossingId")).intValue();
 				 if(crossingsSize < crossingId){
 					 crossingsSize = crossingId;
 				 }
@@ -56,13 +57,13 @@ public class JsonParser {
 		         JSONArray coordinates = (JSONArray)obj.get("coordinates");
 		         boolean vertical = (boolean) obj.get("vertical");
 		         boolean left = (boolean) obj.get("left");		         
-		         createRoad(crossingId,in, out, coordinates, vertical, left, ((Long) obj.get("roadId")).intValue());
+		         createRoad(crossingId, secondCrossingId, in, out, coordinates, vertical, left, ((Long) obj.get("roadId")).intValue());
 		         
 			}
 			
 			return crossingsSize + 1;
 	    }
-	    private void createRoad(int crossingId, boolean in, boolean out, JSONArray coordinates, boolean vertical, boolean left, int roadId){
+	    private void createRoad(int crossingId, int secondCrossingId, boolean in, boolean out, JSONArray coordinates, boolean vertical, boolean left, int roadId){
 	    	Road road = new Road(new Double2D((Double)coordinates.get(0), (Double)coordinates.get(1)), 
     				new Double2D((Double)coordinates.get(2), (Double)coordinates.get(3)), vertical, left, roadId);
 
@@ -80,6 +81,15 @@ public class JsonParser {
 	    		}
 	    		roads.add(road);
 	    		roadsIn.put(crossingId, roads);
+	    		if(secondCrossingId != -1){
+	    			roads = roadsOut.get(secondCrossingId);
+		    		if(roads == null){
+		    			roads = new ArrayList<>();
+		    		}
+		    		roads.add(road);
+		    		roadsOut.put(secondCrossingId, roads);
+		    	}
+	    		
 	    	}
 	    	if(out){
 	    		roads = roadsOut.get(crossingId);
@@ -88,6 +98,14 @@ public class JsonParser {
 	    		}
 	    		roads.add(road);
 	    		roadsOut.put(crossingId, roads);
+	    	}
+	    	if(secondCrossingId != -1){
+	    		roads = roadsIn.get(secondCrossingId);
+	    		if(roads == null){
+	    			roads = new ArrayList<>();
+	    		}
+	    		roads.add(road);
+	    		roadsIn.put(secondCrossingId, roads);
 	    	}
 	    }
 	    
