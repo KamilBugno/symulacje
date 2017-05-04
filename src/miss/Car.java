@@ -24,7 +24,7 @@ public class Car implements Steppable{
 	private CarStatistics carStatistics;
 	private long startTime;
 	private long initialTime;
-	private boolean areStatisticsShowed;
+	private boolean areStatisticsShowed = false;
 	
 	public Car(MutableDouble2D startPosition)
 	{
@@ -140,9 +140,41 @@ public class Car implements Steppable{
 			startTime = System.nanoTime();
 		}else if(!areStatisticsShowed){
 			System.out.println(carStatistics);
+
+			if(areCarsEndDriving()){
+				PieChart demo = new PieChart("Statystyki auta", "Podzial czasu za wzgledu na czynnosci", carStatistics);
+				demo.pack();
+				demo.setVisible(true);
+			}
+
 			areStatisticsShowed = true;
 		}
 	}
+
+	public boolean areCarsEndDriving(){ //nie dziala, bo auto tworza sie w magiczny sposob podczas dzialania programu
+		int i = 0;
+		for(Crossing crossing : cars.getCity().getCrossings()){
+			for(Road road : crossing.getIn()){
+				for (Car car : road.getCarsOnRoad()){
+					i++;
+					if(!car.areStatisticsShowed){
+						//return false;
+					}
+				}
+			}
+			for(Road road : crossing.getOut()){
+				for (Car car : road.getCarsOnRoad()){
+					i++;
+					if(!car.areStatisticsShowed){
+						//return false;
+					}
+				}
+			}
+		}
+		System.out.println(i);
+		return true;
+	}
+
 
 	public boolean isCrossing() {
 		Road road = getCars().getRoad(this); //pobieram droge na ktorej znajduje sie auto

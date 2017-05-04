@@ -29,7 +29,7 @@ public class Road {
     public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left, int id){
 		carsOnRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
-        numCars = 5;
+        numCars = 1;
         this.vertical = vertical;
         this.startPoint = startPoint;
         this.endPoint = endPoint;

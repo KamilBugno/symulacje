@@ -91,4 +91,9 @@ public class Cars extends SimState{
 		}
 		return cars;
 	}
+
+	public City getCity() {
+		return city;
+	}
+
 }
