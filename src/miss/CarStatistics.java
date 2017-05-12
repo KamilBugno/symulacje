@@ -1,15 +1,30 @@
 package miss;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Kamil on 2017-04-29.
  */
 public class CarStatistics {
+    private List<Integer> list;
     int numberOfCoveredCrossings;
     long timeOfSlowingDown;
     long timeOfSpeedingUp;
     long timeOfStopping;
     long timeOfDrivingWithoutSpeedChange;
 
+    CarStatistics(){
+        list = new ArrayList<>();
+    }
+
+    public List<Integer> getList() {
+        return list;
+    }
+
+    public void setList(List<Integer> list) {
+        this.list = list;
+    }
 
     public void addTimeOfDrivingWithoutSpeedChange(long timeOfDrivingWithoutSpeedChange) {
         this.timeOfDrivingWithoutSpeedChange += timeOfDrivingWithoutSpeedChange;

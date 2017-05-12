@@ -13,11 +13,18 @@ public class Cars extends SimState{
 	private Continuous2D yard;
 	private City city = City.getInstance();
 	private List<Crossing> cityCrossings = city.getCrossings();
+	private CarStatistics carFullStatistics;
+	private long timeStart;
+	private boolean areStatisticsShown;
 
 	public Cars(long seed) {
 		super(seed);
 		yard = new Continuous2D(1.0,100,100);
-		
+
+		carFullStatistics = new CarStatistics();
+		timeStart = System.nanoTime();
+		areStatisticsShown = false;
+
 		DataGenerator generator = new DataGenerator();
 		try {
 			generator.generate();
@@ -94,6 +101,30 @@ public class Cars extends SimState{
 
 	public City getCity() {
 		return city;
+	}
+
+	public CarStatistics getCarFullStatistics() {
+		return carFullStatistics;
+	}
+
+	public void setCarFullStatistics(CarStatistics carFullStatistics) {
+		this.carFullStatistics = carFullStatistics;
+	}
+
+	public boolean isAreStatisticsShown() {
+		return areStatisticsShown;
+	}
+
+	public void setAreStatisticsShown(boolean areStatisticsShown) {
+		this.areStatisticsShown = areStatisticsShown;
+	}
+
+	public long getTimeStart() {
+		return timeStart;
+	}
+
+	public void setTimeStart(long timeStart) {
+		this.timeStart = timeStart;
 	}
 
 }

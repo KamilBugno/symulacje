@@ -87,6 +87,7 @@ public class Road {
 
 			if(crossing.getIn().contains(road)){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
 				isThereCrossing = true;
+				car.addNumberOfCoveredCrossings();
 				if(road !=null){
 					road.carsOnRoad.remove(car); //usuwam auto z tej drogi
 				}
@@ -133,7 +134,7 @@ public class Road {
 				}
                 car.setNeedToStop(false);
 
-
+				break;
 			}
 		}
 		return isThereCrossing;

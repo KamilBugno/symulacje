@@ -1,10 +1,19 @@
 package miss;
 
 import ec.util.MersenneTwisterFast;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
+import org.jfree.ui.RefineryUtilities;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.util.Double2D;
 import sim.util.MutableDouble2D;
+
+import java.util.Random;
 
 public class Car implements Steppable{
 
@@ -16,18 +25,18 @@ public class Car implements Steppable{
 	private boolean needToSpeedUp;
 	private boolean needToChangeRoad;
 	private boolean isInitialStep = true;
-	private double speed;
 	private MersenneTwisterFast random;
 	private double defaultSpeed;
 	private boolean left;
 	private boolean vertical;
 	private CarStatistics carStatistics;
 	private long startTime;
-	private long initialTime;
 	private boolean areStatisticsShowed = false;
+	private int numberOfCoveredCrossings;
 	
 	public Car(MutableDouble2D startPosition)
 	{
+		numberOfCoveredCrossings = 0;
 		carStatistics = new CarStatistics();
 		this.startPosition = startPosition;
 		currentPosition = startPosition;
@@ -142,11 +151,33 @@ public class Car implements Steppable{
 			System.out.println(carStatistics);
 
 			if(areCarsEndDriving()){
-				PieChart demo = new PieChart("Statystyki auta", "Podzial czasu za wzgledu na czynnosci", carStatistics);
-				demo.pack();
-				demo.setVisible(true);
+				CarStatistics carFullStatistics = cars.getCarFullStatistics();
+				carFullStatistics.addTimeOfDrivingWithoutSpeedChange(carStatistics.timeOfDrivingWithoutSpeedChange);
+				carFullStatistics.addTimeOfSlowingDown(carStatistics.timeOfSlowingDown);
+				carFullStatistics.addTimeOfSpeedingUp(carStatistics.timeOfSpeedingUp);
+				carFullStatistics.addTimeOfStopping(carStatistics.timeOfStopping);
+				carFullStatistics.getList().add(carStatistics.numberOfCoveredCrossings);
 			}
 
+			//po jakims czasie dla jednego losowego auta sie wykonuje rysowanie
+			if(!cars.isAreStatisticsShown() && System.nanoTime() - cars.getTimeStart() > 15000000000L) {
+				cars.setAreStatisticsShown(true);
+				PieChart demo = new PieChart("Statystyki aut", "Podzial czasu za wzgledu na czynnosci", cars.getCarFullStatistics());
+				demo.pack();
+				demo.setVisible(true);
+
+				String name = "Histogram liczby pokonanych skrzyżowań przez auta";
+
+				CrossingsStatisticsHistogram crossingsStatisticsHistogram =
+						new CrossingsStatisticsHistogram(name,name, cars.getCarFullStatistics().getList());
+				crossingsStatisticsHistogram.pack( );
+				RefineryUtilities.centerFrameOnScreen( crossingsStatisticsHistogram );
+				crossingsStatisticsHistogram.setVisible( true );
+
+
+
+
+			}
 			areStatisticsShowed = true;
 		}
 	}
@@ -244,6 +275,10 @@ public class Car implements Steppable{
 
 	public void setCarStatistics(CarStatistics carStatistics) {
 		this.carStatistics = carStatistics;
+	}
+
+	public void addNumberOfCoveredCrossings() {
+		numberOfCoveredCrossings++;
 	}
 
 }
