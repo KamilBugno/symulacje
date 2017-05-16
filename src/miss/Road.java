@@ -93,14 +93,7 @@ public class Road {
 					road.carsOnRoad.remove(car); //usuwam auto z tej drogi
 				}
 
-				//int size1 = crossing.getOut().size(); //drogi wyjazdowe ze skrzyzowania
-			
 				List<Road> roads = crossing.getOut();
-//				for(Road road1: roads){
-//					if(road1.isDoubleRoad()){
-//						System.out.println(road1.id);
-//					}
-//				}
 				Iterator<Road> iterator = roads.iterator();
 				Road currentRoad;
 				while(iterator.hasNext()){

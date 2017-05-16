@@ -79,7 +79,6 @@ public class JsonParser {
 	    		if(roads == null){
 	    			roads = new ArrayList<>();
 	    		}
-	    		//road.setDoubleRoad(true);
 	    		roads.add(road);
 	    		roadsIn.put(crossingId, roads);
 	    		if(secondCrossingId != -1){
@@ -100,7 +99,6 @@ public class JsonParser {
 	    		if(roads == null){
 	    			roads = new ArrayList<>();
 	    		}
-	    	//	road.setDoubleRoad(true);
 	    		roads.add(road);
 	    		roadsOut.put(crossingId, roads);
 	    	}
