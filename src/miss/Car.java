@@ -280,5 +280,8 @@ public class Car implements Steppable{
 	public void addNumberOfCoveredCrossings() {
 		numberOfCoveredCrossings++;
 	}
+	public boolean needToStop(){
+		return needToStop;
+	}
 
 }

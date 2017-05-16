@@ -51,7 +51,10 @@ public class Road {
 		boolean isOnTheRoad = checkIfIsOnTheRoad(car);
 		setLeft(car, left);
 		setVertical(car, vertical);
-        if(diff > 1 && diff < 4 && isOnTheRoad){
+	    if(checkIfNeedToStop(car)){
+	        	car.setNeedToStop(true);
+	        }
+	    else if(diff > 1 && diff < 4 && isOnTheRoad){
             car.setNeedToSlowDown(true);
             car.setNeedToStop(false);
         }
@@ -66,11 +69,13 @@ public class Road {
             car.setNeedToSpeedUp(true);
             car.setNeedToStop(false);
         }
+  
         else if(isOnTheRoad){
             car.setNeedToSlowDown(false);
             car.setNeedToSpeedUp(false);
             car.setNeedToStop(false);
         }
+     
         
      }
 
@@ -94,6 +99,7 @@ public class Road {
 				}
 
 				List<Road> roads = crossing.getOut();
+
 				Iterator<Road> iterator = roads.iterator();
 				Road currentRoad;
 				while(iterator.hasNext()){
@@ -284,7 +290,24 @@ public class Road {
     private void setLeft(Car car, boolean left){
     	car.setLeft(left);
     }
-
+    private boolean checkIfNeedToStop(Car car){
+    	int diff = (int) getDiff(car);
+    	int index = carsOnRoad.indexOf(car);
+    	if(index != 0){
+	    	Car previous = carsOnRoad.get(index -1);
+	    	if(checkIfIsOnTheRoad(car)){
+	    		//if(diff <=1){
+	    			if(previous.needToStop()){
+	    				if(diff == 1){
+	    				return true;
+	    				}
+	    			}
+	    		//}
+	    	}
+    	
+    	}
+    	return false;
+    }
 
 	public boolean isLeft() {
 		return left;
