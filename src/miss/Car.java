@@ -162,17 +162,17 @@ public class Car implements Steppable{
 			//po jakims czasie dla jednego losowego auta sie wykonuje rysowanie
 			if(!cars.isAreStatisticsShown() && System.nanoTime() - cars.getTimeStart() > 15000000000L) {
 				cars.setAreStatisticsShown(true);
-				PieChart demo = new PieChart("Statystyki aut", "Podzial czasu za wzgledu na czynnosci", cars.getCarFullStatistics());
-				demo.pack();
-				demo.setVisible(true);
+	//			PieChart demo = new PieChart("Statystyki aut", "Podzial czasu za wzgledu na czynnosci", cars.getCarFullStatistics());
+//				demo.pack();
+//				demo.setVisible(true);
 
 				String name = "Histogram liczby pokonanych skrzyżowań przez auta";
 
-				CrossingsStatisticsHistogram crossingsStatisticsHistogram =
-						new CrossingsStatisticsHistogram(name,name, cars.getCarFullStatistics().getList());
-				crossingsStatisticsHistogram.pack( );
-				RefineryUtilities.centerFrameOnScreen( crossingsStatisticsHistogram );
-				crossingsStatisticsHistogram.setVisible( true );
+		//		CrossingsStatisticsHistogram crossingsStatisticsHistogram =
+			//			new CrossingsStatisticsHistogram(name,name, cars.getCarFullStatistics().getList());
+//				crossingsStatisticsHistogram.pack( );
+//				RefineryUtilities.centerFrameOnScreen( crossingsStatisticsHistogram );
+//				crossingsStatisticsHistogram.setVisible( true );
 
 
 

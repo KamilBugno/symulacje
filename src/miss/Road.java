@@ -23,24 +23,25 @@ public class Road {
     Double2D endPoint;
     private boolean vertical;
 	private boolean left;
+	private boolean doubleRoad = false;
     private City city = City.getInstance();
 	private List<Crossing> cityCrossings = city.getCrossings();
 
-    public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left, int id){
+    public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left, boolean doubleRoad, int id){
 		carsOnRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
-        numCars = 1;
+        numCars = 3;
         this.vertical = vertical;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.left = left;
 		this.id = id;
-        createCars(left, vertical);
+        createCars(left, vertical, doubleRoad);
     }
 	
-	public void createCars(boolean left, boolean vertical){
+	public void createCars(boolean left, boolean vertical, boolean doubleRoad){
 		for(int i = 0; i < numCars; i++){
-			createCarsOnRoads(left);
+			createCarsOnRoads(left, doubleRoad);
 		}
 		sortListsOfCars(carsOnRoad, left);
 	}
@@ -92,8 +93,24 @@ public class Road {
 					road.carsOnRoad.remove(car); //usuwam auto z tej drogi
 				}
 
-				int size = crossing.getOut().size(); //drogi wyjazdowe ze skrzyzowania
-
+				//int size1 = crossing.getOut().size(); //drogi wyjazdowe ze skrzyzowania
+			
+				List<Road> roads = crossing.getOut();
+//				for(Road road1: roads){
+//					if(road1.isDoubleRoad()){
+//						System.out.println(road1.id);
+//					}
+//				}
+				Iterator<Road> iterator = roads.iterator();
+				Road currentRoad;
+				while(iterator.hasNext()){
+					currentRoad = iterator.next();
+					if(currentRoad.isDoubleRoad()){
+						iterator.remove();
+					}
+				}
+				 int size = roads.size();
+				
 				Random rand = new Random();
 				int index = rand.nextInt(size);
 				Road finalRoad = crossing.getOut().get(index);
@@ -150,27 +167,28 @@ public class Road {
     	return false;
     }
     
-    private void createCarsOnRoads(boolean left){
-        if(vertical){
-			if(left){
-				position = new MutableDouble2D(startPoint.x, startPoint.y + 3 + (endPoint.y-startPoint.y-6) * random.nextDouble());
+    private void createCarsOnRoads(boolean left, boolean doubleRoad){
+    	if(!doubleRoad){
+	        if(vertical){
+				if(left){
+					position = new MutableDouble2D(startPoint.x, startPoint.y + 3 + (endPoint.y-startPoint.y-6) * random.nextDouble());
+				}
+				else{
+					position = new MutableDouble2D(startPoint.x, startPoint.y + 3 + (endPoint.y-startPoint.y-6) * random.nextDouble());
+				}
+				Car car = new Car(position);
+				carsOnRoad.add(car);
+			}else{
+				if(left){
+					position =  new MutableDouble2D(startPoint.x + 3 + (endPoint.x-startPoint.x-6) * random.nextDouble(), startPoint.y);
+				}
+				if(!left){
+					position =  new MutableDouble2D(startPoint.x + 3+ (endPoint.x-startPoint.x-6) * random.nextDouble(), startPoint.y);
+				}
+				Car car = new Car(position);
+				carsOnRoad.add(car);
 			}
-			else{
-				position = new MutableDouble2D(startPoint.x, startPoint.y + 3 + (endPoint.y-startPoint.y-6) * random.nextDouble());
-			}
-			Car car = new Car(position);
-			carsOnRoad.add(car);
-		}else{
-			if(left){
-				position =  new MutableDouble2D(startPoint.x + 3 + (endPoint.x-startPoint.x-6) * random.nextDouble(), startPoint.y);
-			}
-			if(!left){
-				position =  new MutableDouble2D(startPoint.x + 3+ (endPoint.x-startPoint.x-6) * random.nextDouble(), startPoint.y);
-			}
-			Car car = new Car(position);
-			carsOnRoad.add(car);
-		}
-
+    	}
     }
 
     
@@ -289,6 +307,12 @@ public class Road {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public void setDoubleRoad(boolean doubleRoad){
+    	this.doubleRoad = doubleRoad;
+    }
+    public boolean isDoubleRoad(){
+    	return doubleRoad;
     }
 
 }
