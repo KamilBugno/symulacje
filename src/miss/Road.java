@@ -61,7 +61,7 @@ public class Road {
         else if(diff <= 1 || !isOnTheRoad){
         	 if(checkIfNeedToChangeRoad(car)){
         		 if(changeRoad(car)){
-				//	 car.getCarStatistics().addCrossings();
+					 car.getCarStatistics().addCrossings();
 				 }
         	 }
         }

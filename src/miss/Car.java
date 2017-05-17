@@ -37,7 +37,7 @@ public class Car implements Steppable{
 	public Car(MutableDouble2D startPosition)
 	{
 		numberOfCoveredCrossings = 0;
-	//	carStatistics = new CarStatistics();
+		carStatistics = new CarStatistics();
 		this.startPosition = startPosition;
 		currentPosition = startPosition;
 		random = new MersenneTwisterFast();
@@ -53,7 +53,7 @@ public class Car implements Steppable{
 	@Override
 	public void step(SimState state) {
 
-		//generateStatistics();
+		generateStatistics();
 
 		cars = (Cars) state;
 		cars.getRoad(this).setCarSpeedValues(this);

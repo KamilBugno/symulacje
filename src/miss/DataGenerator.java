@@ -21,8 +21,8 @@ public class DataGenerator {
 		array.add(createObject(4, -1, 5, true, false, 77.0, 49.0, 100.0, 49.0, false, true)); // droga h
 		array.add(createObject(4, -1, 6, false, true, 77.0, 50.0, 100.0, 50.0, false, false)); // droga h
 		
-		array.add(createObject(2, 3, 7, true, false, 51.0, 21.0, 75.0, 21.0, false, true)); // droga d
-		array.add(createObject(2, 3, 8, false, true, 51.0, 23.0, 75.0, 23.0, false, false)); // droga d
+		array.add(createObject(3, 2, 7, false, true, 51.0, 21.0, 75.0, 21.0, false, true)); // droga d
+		array.add(createObject(3, 2, 8, true, false, 51.0, 23.0, 75.0, 23.0, false, false)); // droga d
 		
 		array.add(createObject(3, -1, 9, true, false, 77.0, 21.0, 100.0, 21.0, false, true)); // droga g
 		array.add(createObject(3, -1, 10, false, true, 77.0, 23.0, 100.0, 23.0, false, false)); // droga g
@@ -30,14 +30,14 @@ public class DataGenerator {
 		array.add(createObject(2, -1, 11, false, true, 52.0, 0.0, 52.0, 20.0, true, true)); // droga c ///zmiana 4->3
 		array.add(createObject(2, -1, 12, true, false, 50.0, 0.0, 50.0, 20.0, true, false)); // droga c ///zmiana 4->3
 		
-		array.add(createObject(1, 2, 13, true, false, 52.0, 21.0, 52.0, 47.0, true, true)); // droga b ///zmiana 4->3
-		array.add(createObject(1, 2, 14, false, true, 50.0, 21.0, 50.0, 47.0, true, false)); // droga b ///zmiana 4->3
+		array.add(createObject(2, 1, 13, false, true, 52.0, 21.0, 52.0, 47.0, true, true)); // droga b ///zmiana 4->3
+		array.add(createObject(2, 1, 14, true, false, 50.0, 21.0, 50.0, 47.0, true, false)); // droga b ///zmiana 4->3
 		
 		array.add(createObject(3, -1, 15, false, true, 79.0, 0.0, 79.0, 20.0, true, true)); // droga f ///zmiana 5->4
 		array.add(createObject(3, -1, 16, true, false, 77.0, 0.0, 77.0, 20.0, true, false)); // droga f ///zmiana 5->4
 		
-		array.add(createObject(4, 3, 17, true, false, 79.0, 21.0, 79.0, 47.0, true, true)); // droga e ///zmiana 5->4
-		array.add(createObject(4, 3, 18, false, true, 77.0, 21.0, 77.0, 47.0, true, false)); // droga e ///zmiana 5->4
+		array.add(createObject(3, 4, 17, false, true, 79.0, 21.0, 79.0, 47.0, true, true)); // droga e ///zmiana 5->4
+		array.add(createObject(3, 4, 18, true, false, 77.0, 21.0, 77.0, 47.0, true, false)); // droga e ///zmiana 5->4
 		
 		array.add(createObject(0, -1, 19, false, true, 0.0, 73.0, 48.0, 73.0, false, true)); // droga k
 		array.add(createObject(0, -1, 20, true, false, 0.0, 75.0, 48.0, 75.0, false, false)); // droga k
