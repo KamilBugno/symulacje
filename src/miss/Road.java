@@ -36,6 +36,7 @@ public class Road {
         this.endPoint = endPoint;
         this.left = left;
 		this.id = id;
+		this.doubleRoad = doubleRoad;
         createCars(left, vertical, doubleRoad);
     }
 	
@@ -84,14 +85,21 @@ public class Road {
     }
 
     public boolean changeRoad(Car car){
+   	
+    	
 		Road road = car.getCars().getRoad(car); //pobieram droge na ktorej znajduje sie auto
+		boolean changed = false;
+		int id = 0;
 		if(road == null){
 			System.out.println("Road jest nullem");
 		}
 		boolean isThereCrossing = false;
-		for(Crossing crossing : cityCrossings){
+		
 
-			if(crossing.getIn().contains(road)){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
+		
+		for(Crossing crossing : cityCrossings){
+			for(Road currRoad: crossing.getIn()){
+			if(currRoad.getId() == road.getId()){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
 				isThereCrossing = true;
 				car.addNumberOfCoveredCrossings();
 				if(road !=null){
@@ -149,9 +157,14 @@ public class Road {
                     }
 				}
                 car.setNeedToStop(false);
-
+                changed = true;
 				break;
 			}
+			}
+		}
+		if(!changed){
+			//System.out.println("not changed :(");
+	
 		}
 		return isThereCrossing;
     }
