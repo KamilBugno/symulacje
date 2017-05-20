@@ -33,6 +33,7 @@ public class Car implements Steppable{
 	private long startTime;
 	private boolean areStatisticsShowed = false;
 	private int numberOfCoveredCrossings;
+	private Road nextRoad;
 	
 	public Car(MutableDouble2D startPosition)
 	{
@@ -148,7 +149,7 @@ public class Car implements Steppable{
 			}
 			startTime = System.nanoTime();
 		}else if(!areStatisticsShowed){
-			System.out.println(carStatistics);
+			//System.out.println(carStatistics);
 
 			if(areCarsEndDriving()){
 				CarStatistics carFullStatistics = cars.getCarFullStatistics();
@@ -162,17 +163,17 @@ public class Car implements Steppable{
 			//po jakims czasie dla jednego losowego auta sie wykonuje rysowanie
 			if(!cars.isAreStatisticsShown() && System.nanoTime() - cars.getTimeStart() > 15000000000L) {
 				cars.setAreStatisticsShown(true);
-	//			PieChart demo = new PieChart("Statystyki aut", "Podzial czasu za wzgledu na czynnosci", cars.getCarFullStatistics());
-//				demo.pack();
-//				demo.setVisible(true);
+				PieChart demo = new PieChart("Statystyki aut", "Średni podzial czasu za wzgledu na czynnosci", cars.getCarFullStatistics());
+				demo.pack();
+				demo.setVisible(true);
 
 				String name = "Histogram liczby pokonanych skrzyżowań przez auta";
 
-		//		CrossingsStatisticsHistogram crossingsStatisticsHistogram =
-			//			new CrossingsStatisticsHistogram(name,name, cars.getCarFullStatistics().getList());
-//				crossingsStatisticsHistogram.pack( );
-//				RefineryUtilities.centerFrameOnScreen( crossingsStatisticsHistogram );
-//				crossingsStatisticsHistogram.setVisible( true );
+				CrossingsStatisticsHistogram crossingsStatisticsHistogram =
+						new CrossingsStatisticsHistogram(name,name, cars.getCarFullStatistics().getList());
+				crossingsStatisticsHistogram.pack( );
+				RefineryUtilities.centerFrameOnScreen( crossingsStatisticsHistogram );
+				crossingsStatisticsHistogram.setVisible( true );
 
 
 
@@ -202,7 +203,7 @@ public class Car implements Steppable{
 				}
 			}
 		}
-		System.out.println(i);
+		//System.out.println(i);
 		return true;
 	}
 
@@ -282,6 +283,14 @@ public class Car implements Steppable{
 	}
 	public boolean needToStop(){
 		return needToStop;
+	}
+
+	public Road getNextRoad() {
+		return nextRoad;
+	}
+
+	public void setNextRoad(Road nextRoad) {
+		this.nextRoad = nextRoad;
 	}
 
 }

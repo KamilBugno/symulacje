@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.SynchronousQueue;
 
 import ec.util.MersenneTwisterFast;
 import sim.util.Double2D;
@@ -26,6 +27,7 @@ public class Road {
 	private boolean doubleRoad = false;
     private City city = City.getInstance();
 	private List<Crossing> cityCrossings = city.getCrossings();
+	private boolean ifDebug = false;
 
     public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left, boolean doubleRoad, int id){
 		carsOnRoad = new ArrayList<>();
@@ -61,7 +63,8 @@ public class Road {
         }
         else if(diff <= 1 || !isOnTheRoad){
         	 if(checkIfNeedToChangeRoad(car)){
-        		 if(changeRoad(car)){
+				 car.setNeedToStop(true);
+        		 if(changeRoad(car)!= null){
 					 car.getCarStatistics().addCrossings();
 				 }
         	 }
@@ -84,29 +87,33 @@ public class Road {
         return carsOnRoad;
     }
 
-    public boolean changeRoad(Car car){
-   	
+    public Crossing changeRoad(Car car){
+   	 if(ifDebug)System.out.println("changeRoad "+car.toString());
     	
 		Road road = car.getCars().getRoad(car); //pobieram droge na ktorej znajduje sie auto
 		boolean changed = false;
 		int id = 0;
 		if(road == null){
-			System.out.println("Road jest nullem");
+			if(ifDebug)System.out.println("Road jest nullem");
 		}
-		boolean isThereCrossing = false;
-		
+
+		Crossing currentCrossing = null;
 
 		
 		for(Crossing crossing : cityCrossings){
 			for(Road currRoad: crossing.getIn()){
 			if(currRoad.getId() == road.getId()){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
-				isThereCrossing = true;
-				car.addNumberOfCoveredCrossings();
-				if(road !=null){
-					road.carsOnRoad.remove(car); //usuwam auto z tej drogi
-				}
-
 				List<Road> roads = crossing.getOut();
+				Road finalRoad = car.getNextRoad();
+
+				if(finalRoad==null){
+					int size = roads.size();
+					Random rand = new Random();
+					int index = rand.nextInt(size);
+					finalRoad = crossing.getOut().get(index);
+					if(ifDebug)System.out.println(car.toString() + " finalRoad==null, road "+road + " ,finalRoad "+finalRoad);
+					car.setNextRoad(finalRoad);
+				}
 
 				Iterator<Road> iterator = roads.iterator();
 				Road currentRoad;
@@ -116,12 +123,39 @@ public class Road {
 						iterator.remove();
 					}
 				}
-				 int size = roads.size();
+
+				if(!crossing.getLightCrossing().get(finalRoad)){
+					if(ifDebug)System.out.println(car.toString() + " return$$$");
+					return null;
+				}
+
+				if(ifDebug)System.out.println(car.toString() + " po return, road " + road + " ,finalRoad" + finalRoad);
+				currentCrossing = crossing;
+				car.addNumberOfCoveredCrossings();
+				if(road !=null){
+					road.carsOnRoad.remove(car); //usuwam auto z tej drogi
+				}
+
+
+
+
 				
-				Random rand = new Random();
-				int index = rand.nextInt(size);
-				Road finalRoad = crossing.getOut().get(index);
+
 				finalRoad.carsOnRoad.add(car); //dodanie auta do odpowiedniej drogi
+
+				if(car == null){
+					if(ifDebug)System.out.println("car == null "+car.toString()+ " road " + road+ " ,finalRoad " + finalRoad);
+				}
+				if(car.getCars() == null){
+					if(ifDebug)System.out.println("car.getCars() == null "+car.toString()+ " road " + road+ " ,finalRoad " + finalRoad);
+				}
+				if(car.getCars().getRoad(car) == null){
+					if(ifDebug)System.out.println("car.getCars().getRoad(car) == null "+car.toString()+ " road" + road+ " ,finalRoad " + finalRoad);
+				}
+
+
+
+
 
 				if(finalRoad.startPoint.getX() > (car.getCurrentPosition().getX()-5)
 						&& finalRoad.startPoint.getX() < (car.getCurrentPosition().getX()+5)
@@ -130,32 +164,33 @@ public class Road {
 					//wyzej: sprawdzanie gdzie ma zostać dopisane auto - bufor kwadratowy 5x5
 
                     //ponizej: obliczenie nowej pozycji auta w zaleznosci od parametrow drogi
-                    if(car.getCars().getRoad(car).isLeft() && !car.getCars().getRoad(car).isVertical()){
+                    if(road.isLeft() && !road.isVertical()){
                         car.setCurrentPosition(new MutableDouble2D(finalRoad.startPoint.getX()-5, finalRoad.startPoint.getY()));
                     }
-                    else if(!car.getCars().getRoad(car).isLeft() && !car.getCars().getRoad(car).isVertical()){
+                    else if(road.isLeft() && !road.isVertical()){
                         car.setCurrentPosition(new MutableDouble2D(finalRoad.startPoint.getX()+5, finalRoad.startPoint.getY()));
                     }
-                    else if(!car.getCars().getRoad(car).isLeft() && car.getCars().getRoad(car).isVertical()){
+                    else if(!road.isLeft() && road.isVertical()){
                         car.setCurrentPosition(new MutableDouble2D(finalRoad.startPoint.getX(), finalRoad.startPoint.getY()+5));
                     }
-                    else if(car.getCars().getRoad(car).isLeft() && car.getCars().getRoad(car).isVertical()){
+                    else if(road.isLeft() && road.isVertical()){
                         car.setCurrentPosition(new MutableDouble2D(finalRoad.startPoint.getX(), finalRoad.startPoint.getY()-5));
                     }
 				} else{
-                    if(car.getCars().getRoad(car).isLeft() && !car.getCars().getRoad(car).isVertical()){
+                    if(road.isLeft() && !road.isVertical()){
                         car.setCurrentPosition(new MutableDouble2D(finalRoad.endPoint.getX()-5, finalRoad.endPoint.getY()));
                     }
-                    else if(!car.getCars().getRoad(car).isLeft() && !car.getCars().getRoad(car).isVertical()){
+                    else if(!road.isLeft() && !road.isVertical()){
                         car.setCurrentPosition(new MutableDouble2D(finalRoad.endPoint.getX()+5, finalRoad.endPoint.getY()));
                     }
-                    else if(!car.getCars().getRoad(car).isLeft() && car.getCars().getRoad(car).isVertical()){
+                    else if(!road.isLeft() && road.isVertical()){
                         car.setCurrentPosition(new MutableDouble2D(finalRoad.endPoint.getX(), finalRoad.endPoint.getY()+5));
                     }
-                    else if(car.getCars().getRoad(car).isLeft() && car.getCars().getRoad(car).isVertical()){
+                    else if(road.isLeft() && road.isVertical()){
                         car.setCurrentPosition(new MutableDouble2D(finalRoad.endPoint.getX(), finalRoad.endPoint.getY()-5));
                     }
 				}
+				car.setNextRoad(null);
                 car.setNeedToStop(false);
                 changed = true;
 				break;
@@ -166,7 +201,7 @@ public class Road {
 			//System.out.println("not changed :(");
 	
 		}
-		return isThereCrossing;
+		return currentCrossing;
     }
     
     private boolean checkIfNeedToChangeRoad(Car car){    	
