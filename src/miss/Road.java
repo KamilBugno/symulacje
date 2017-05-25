@@ -89,6 +89,10 @@ public class Road {
 
     public Crossing changeRoad(Car car){
    	 if(ifDebug)System.out.println("changeRoad "+car.toString());
+   	 
+   	 	List<Road> pathToTarget = car.pathToTarget;
+   	 
+   	 
     	
 		Road road = car.getCars().getRoad(car); //pobieram droge na ktorej znajduje sie auto
 		boolean changed = false;
@@ -104,7 +108,13 @@ public class Road {
 			for(Road currRoad: crossing.getIn()){
 			if(currRoad.getId() == road.getId()){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
 				List<Road> roads = crossing.getOut();
-				Road finalRoad = car.getNextRoad();
+				Road finalRoad; //= car.getNextRoad();
+				Iterator<Road> pathIterator = pathToTarget.iterator();
+				finalRoad = pathIterator.next();
+				pathIterator.remove();
+				System.out.println("carId: "+ car.toString() + " currentRoad: " + road.id);
+				System.out.println("carId: "+ car.toString() + " nextRoad: " + finalRoad.id);
+				
 
 				if(finalRoad==null){
 					int size = roads.size();
@@ -123,7 +133,7 @@ public class Road {
 						iterator.remove();
 					}
 				}
-
+				
 				if(!crossing.getLightCrossing().get(finalRoad)){
 					if(ifDebug)System.out.println(car.toString() + " return$$$");
 					return null;
@@ -279,7 +289,185 @@ public class Road {
 	public List<Crossing> getCityCrossings() {
 		return cityCrossings;
 	}
+	
+	public int findTargetRoad(int id){
+		Random rand = new Random();
+		int targetId = rand.nextInt(25);
+		if(targetId == id){
+			targetId = rand.nextInt(25);
+		}
+		return targetId;
+	}
+	
+	public List<Road> findRoadsBetweenCurrentRoadAndTargetRoad(int currentId){
+		List<Road> roads = new ArrayList<Road>();
+		
+		int targetId = findTargetRoad(currentId);
+		Road currentRoad = this;
+		Road targetRoad = null;
+		Crossing currentCrossing = null;
+		Crossing targetCrossing = null;
+		for(Crossing crossing: cityCrossings){
+			for(Road road: crossing.getIn()){
+				if(road.id == targetId){
+					targetRoad = road;
+					targetCrossing = crossing;
+				}
+			}
+			for(Road road: crossing.getOut()){
+				if(road.id == targetId){
+					targetRoad = road;
+					targetCrossing = crossing;
+				}
+			}
+		}
+		currentCrossing = findCrossing(currentRoad);
+		List<Road> currentCrossingDoubleRoads = findDoubleRoads(currentCrossing);
+		List<Road> targetCrossingDoubleRoads = findDoubleRoads(targetCrossing);
+		currentCrossingDoubleRoads.retainAll(targetCrossingDoubleRoads);
 
+		if(currentCrossing == targetCrossing){
+			roads.add(targetRoad);
+			return roads;
+		}
+		else if(!currentCrossingDoubleRoads.isEmpty()){
+			roads.add(currentCrossingDoubleRoads.get(0));
+			roads.add(targetRoad);
+			return roads;
+		}
+		
+		else {
+			boolean contains = false;
+			List<Road> doubleRoads = new ArrayList<Road>();
+			int iter = 1; 
+			int counter = 0; 
+			while(!areCrossingsEqual(currentCrossing, targetCrossing)){				
+				currentCrossingDoubleRoads = findDoubleRoads(currentCrossing);
+				
+				doubleRoads = findDoubleRoads(currentCrossing);
+				currentCrossingDoubleRoads.retainAll(targetCrossingDoubleRoads);
+				
+				if(!currentCrossingDoubleRoads.isEmpty()){
+					roads.add(currentCrossingDoubleRoads.get(0));
+					roads.add(targetRoad);
+					return roads;
+				}
+			
+				contains = roads.contains(doubleRoads.get(0));
+				if(!contains){
+					roads.add(doubleRoads.get(0));
+					counter = 0;
+					currentCrossing = findCrossing(doubleRoads.get(0));
+				}
+				else if(contains && counter < 20) {
+					currentCrossing = findSecondCrossing(doubleRoads.get(0), currentCrossing);
+				}
+				else if(counter > 20 ){
+					for(int i = iter; i < doubleRoads.size(); i++){
+						iter = i;
+						contains = roads.contains(doubleRoads.get(i));
+						if(!contains){
+							roads.add(doubleRoads.get(i));
+							counter = 0;
+							currentCrossing = findCrossing(doubleRoads.get(i));
+						}
+						else{
+							currentCrossing = findSecondCrossing(doubleRoads.get(i), currentCrossing);
+							}
+						break;
+					}
+				}
+				counter++;
+			}
+			roads.add(targetRoad);
+		}
+		return roads;
+	}
+	
+	
+	public Crossing findCrossing(Road road){
+		Crossing crossing = null;
+		
+		for(Crossing c: cityCrossings){
+			for(Road r: c.getIn()){
+				if(road.id == r.id){
+					crossing = c;
+				}
+			}
+			for(Road r: c.getOut()){
+				if(road.id == r.id){
+					crossing = c;
+				}
+			}
+		}
+		
+		return crossing;
+	}
+	
+	public Crossing findSecondCrossing(Road r, Crossing c){
+		Crossing crossing = null;
+		
+		for(Crossing cr: cityCrossings){
+			for(Road road: cr.getIn()){
+				if(road.id == r.id && cr != c){
+					crossing = cr;
+				}
+			}
+			for(Road road: cr.getOut()){
+				if(road.id == r.id && cr != c){
+					crossing = cr;
+				}
+			}
+		}
+		return crossing;
+	}
+	
+	public List<Road> findDoubleRoads(Crossing crossing){
+		List<Road> roads = new ArrayList<Road>();
+		List<Road> doubleRoads = new ArrayList<Road>();
+		
+		for(Crossing c: cityCrossings){
+			for(Road road: c.getIn()){
+				if(road.isDoubleRoad()){
+					doubleRoads.add(road);
+				}
+			}
+			for(Road road: c.getOut()){
+				if(road.isDoubleRoad()){
+					doubleRoads.add(road);
+				}
+			}
+		}		
+		
+		for(Road road: crossing.getIn()){
+			for(Road doubleRoad: doubleRoads){
+				if(doubleRoad.id == road.id){
+					roads.add(doubleRoad);
+				}
+			}
+		}
+		for(Road road: crossing.getOut()){
+			for(Road doubleRoad: doubleRoads){
+				if(doubleRoad.id == road.id){
+					roads.add(doubleRoad);
+				}
+			}
+		}
+		if(roads.size() == 0){
+			System.out.println("nie znalazlem doubleRoad" );
+		}
+		return roads;
+	}
+
+	private boolean areCrossingsEqual(Crossing c1, Crossing c2){
+		
+		if(c1.getIn() == c2.getIn() && c2.getOut() == c1.getOut()){
+			return true;
+		}
+		
+		return false;
+	}
+	
     private boolean checkIfIsOnTheRoad(Car car){
     	int index;
 		double diff;

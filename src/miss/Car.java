@@ -13,6 +13,7 @@ import sim.engine.Steppable;
 import sim.util.Double2D;
 import sim.util.MutableDouble2D;
 
+import java.util.List;
 import java.util.Random;
 
 public class Car implements Steppable{
@@ -34,6 +35,8 @@ public class Car implements Steppable{
 	private boolean areStatisticsShowed = false;
 	private int numberOfCoveredCrossings;
 	private Road nextRoad;
+	private int roadId;
+	public List<Road> pathToTarget;
 	
 	public Car(MutableDouble2D startPosition)
 	{
@@ -61,6 +64,9 @@ public class Car implements Steppable{
 
 		if(isInitialStep){
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));
+			roadId = cars.getRoad(this).getId();	
+			System.out.println("carId: " + this.toString() + " path to target: " );
+			pathToTarget = cars.getRoad(this).findRoadsBetweenCurrentRoadAndTargetRoad(roadId);
 			isInitialStep = false;
 		}
 		
@@ -161,24 +167,24 @@ public class Car implements Steppable{
 			}
 
 			//po jakims czasie dla jednego losowego auta sie wykonuje rysowanie
-			if(!cars.isAreStatisticsShown() && System.nanoTime() - cars.getTimeStart() > 15000000000L) {
-				cars.setAreStatisticsShown(true);
-				PieChart demo = new PieChart("Statystyki aut", "Średni podzial czasu za wzgledu na czynnosci", cars.getCarFullStatistics());
-				demo.pack();
-				demo.setVisible(true);
-
-				String name = "Histogram liczby pokonanych skrzyżowań przez auta";
-
-				CrossingsStatisticsHistogram crossingsStatisticsHistogram =
-						new CrossingsStatisticsHistogram(name,name, cars.getCarFullStatistics().getList());
-				crossingsStatisticsHistogram.pack( );
-				RefineryUtilities.centerFrameOnScreen( crossingsStatisticsHistogram );
-				crossingsStatisticsHistogram.setVisible( true );
-
-
+//			if(!cars.isAreStatisticsShown() && System.nanoTime() - cars.getTimeStart() > 15000000000L) {
+//				cars.setAreStatisticsShown(true);
+//				PieChart demo = new PieChart("Statystyki aut", "Średni podzial czasu za wzgledu na czynnosci", cars.getCarFullStatistics());
+//				demo.pack();
+//				demo.setVisible(true);
+//
+//				String name = "Histogram liczby pokonanych skrzyżowań przez auta";
+//
+//				CrossingsStatisticsHistogram crossingsStatisticsHistogram =
+//						new CrossingsStatisticsHistogram(name,name, cars.getCarFullStatistics().getList());
+//				crossingsStatisticsHistogram.pack( );
+//				RefineryUtilities.centerFrameOnScreen( crossingsStatisticsHistogram );
+//				crossingsStatisticsHistogram.setVisible( true );
 
 
-			}
+
+
+	//		}
 			areStatisticsShowed = true;
 		}
 	}
@@ -291,6 +297,9 @@ public class Car implements Steppable{
 
 	public void setNextRoad(Road nextRoad) {
 		this.nextRoad = nextRoad;
+	}
+	public List<Road> getPathToTarget(){
+		return pathToTarget;
 	}
 
 }
