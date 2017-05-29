@@ -48,6 +48,7 @@ public class Crossing implements Steppable {
 	@Override
 	public void step(SimState simState) {
 		//System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSssize: " );
 		int outRoadSize = getOut().size();
 		index = (index + 1)%outRoadSize;
 		int currentChange = index -1;
@@ -56,13 +57,24 @@ public class Crossing implements Steppable {
 		}
 		lightCrossing.put(out.get(currentChange), false);
 		lightCrossing.put(out.get(index), true);
+		
 	}
 
 	public Map<Road, Boolean> getLightCrossing() {
+		System.out.println("jestem w get light crossing");
 		return lightCrossing;
 	}
 
 	public void setLightCrossing(Map<Road, Boolean> lightCrossing) {
 		this.lightCrossing = lightCrossing;
+	}
+	
+	public boolean isEmpty(){
+		if(getIn().isEmpty() && getOut().isEmpty()){
+			System.out.println("empty");
+			return true;
+		}
+		System.out.println(" not empty");
+		return false;
 	}
 }
