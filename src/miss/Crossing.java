@@ -25,6 +25,11 @@ public class Crossing implements Steppable {
 			System.out.println("id drogi: " + road.getId() + " czy jest double? " + road.isDoubleRoad());
 			lightCrossing.put(road,false);
 		}
+		for(Road road: in){
+			if(road.isDoubleRoad()){
+				lightCrossing.put(road, false);
+			}
+		}
 		if(out.size()>0){
 			lightCrossing.put(out.get(0), true);
 		}
