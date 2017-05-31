@@ -48,8 +48,8 @@ public class DataGenerator {
 		array.add(createObject(0, 1, 22, false, true, 52.0, 50.0, 52.0, 70.0, true, true)); // droga j
 		array.add(createObject(0, 1, 23, true, false, 50.0, 50.0, 50.0, 70.0, true, false)); // droga j
 		
-		array.add(createObject(0, -1, 24, true, false, 52.0, 73.0, 52.0, 100.0, true, true)); // droga l
-		array.add(createObject(0, -1, 25, false, true, 50.0, 73.0, 50.0, 100.0, true, false)); // droga l
+		array.add(createObject(0, -1, 24, false, true, 52.0, 73.0, 52.0, 100.0, true, true)); // droga l
+		array.add(createObject(0, -1, 25, true, false,  50.0, 73.0, 50.0, 100.0, true, false)); // droga l
 		JSONObject finalObject = new JSONObject();
 		finalObject.put("values", array);
 		FileWriter file = null;

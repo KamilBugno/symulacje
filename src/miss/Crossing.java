@@ -20,7 +20,9 @@ public class Crossing implements Steppable {
 		this.in = in;
 		this.out = out;
 		lightCrossing = new HashMap<>();
+		System.out.println("jestem w konstruktorze crossing");
 		for (Road road : out){
+			System.out.println("id drogi: " + road.getId() + " czy jest double? " + road.isDoubleRoad());
 			lightCrossing.put(road,false);
 		}
 		if(out.size()>0){
