@@ -382,7 +382,9 @@ public class Road {
 			System.out.println("dodaję drogę 2" );
 		//	roads.add(currentCrossingDoubleRoads.get(0));
 			roads.add(secondRoad);
-			roads.add(targetRoad);
+			if(secondRoad.getId() != targetId){
+				roads.add(targetRoad);
+			}
 			System.out.println("droga do celu: ");
 			for (Road road: roads){
 				System.out.println(road.getId());
