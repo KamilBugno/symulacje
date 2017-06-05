@@ -34,7 +34,7 @@ public class Road {
     public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left, boolean doubleRoad, int id){
 		carsOnRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
-        numCars = 3;
+        numCars = 9;
         this.vertical = vertical;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
@@ -65,13 +65,20 @@ public class Road {
         }
         else if(diff <= 1 || !isOnTheRoad){
         	 if(checkIfNeedToChangeRoad(car)){
-				 car.setNeedToStop(true);
-        		 if(!changeRoad(car).isEmpty()){
-        			 System.out.println("changed road");
+				 car.setNeedToStop(false);
+				 Crossing crossing = changeRoad(car);
+				 if(crossing!=null && !crossing.isEmpty()){
+        			// System.out.println("speed changed road");
 					 car.getCarStatistics().addCrossings();
 				 }
         		 else {
-        			 System.out.println("change road znow zwraca pustoooooooo");
+					// System.out.println("speed no changed road");
+					// if(crossing==null || crossing.isEmpty()) System.out.println("speed crossing==null || crossing.isEmpty()");
+					 if(crossing==null){
+						 if(ifDebug)System.out.println("crossing==null");
+					 }else if(crossing.isEmpty()){
+						 if(ifDebug)System.out.println("crossing.isEmpty()");
+					 }
         		 }
         	 }
         }
@@ -94,12 +101,10 @@ public class Road {
     }
 
     public Crossing changeRoad(Car car){
-   	 if(ifDebug)System.out.println("changeRoad "+car.toString());
-   	 
+   	    System.out.println("changeRoad "+car.toString());
+		//System.out.println("changeRoad");
    	 	List<Road> pathToTarget = car.pathToTarget;
-   	 
-   	 
-    	
+
 		Road road = car.getCars().getRoad(car); //pobieram droge na ktorej znajduje sie auto
 		boolean changed = false;
 		int id = 0;
@@ -112,7 +117,19 @@ public class Road {
 		
 		for(Crossing crossing : cityCrossings){
 			for(Road currRoad: crossing.getIn()){
-			if(currRoad.getId() == road.getId()){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
+				int roadId = road.getId();
+				int currRoadId = currRoad.getId();
+				if(currRoadId == roadId){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
+					//System.out.println("inside changeRoad");
+					if(ifDebug){
+						System.out.println("**********");
+						System.out.println("my "+currRoadId);
+						for(Road road1: car.getPathToTarget()){
+							System.out.println(road1.getId());
+						}
+						System.out.println("**********");
+					}
+
 				List<Road> roads = crossing.getOut();
 				Road finalRoad; //= car.getNextRoad();
 				Crossing emptyCrossing = new Crossing(new ArrayList<Road>(), new ArrayList<Road>());
@@ -121,23 +138,15 @@ public class Road {
 					finalRoad = pathIterator.next();
 				}
 				else{
+					System.out.println("141 return emptyCrossing");
 					return emptyCrossing;
 				}
-				System.out.println("----------------------------IS DOUBLE ROAD?!?!?!?!?!??!?!??!?! " + finalRoad.isDoubleRoad());
-				System.out.println("carId: "+ car.toString() + " currentRoad: " + road.id);
-				System.out.println("carId: "+ car.toString() + " nextRoad: " + finalRoad.id);
-				
+				if(ifDebug)System.out.println("----------------------------IS DOUBLE ROAD?!?!?!?!?!??!?!??!?! " + finalRoad.isDoubleRoad());
+				if(ifDebug)System.out.println("carId: "+ car.toString() + " currentRoad: " + road.id);
+				if(ifDebug)System.out.println("carId: "+ car.toString() + " nextRoad: " + finalRoad.id);
 
-				if(finalRoad==null){
-					int size = roads.size();
-					Random rand = new Random();
-					int index = rand.nextInt(size);
-					finalRoad = crossing.getOut().get(index);
-					if(ifDebug)System.out.println(car.toString() + " finalRoad==null, road "+road + " ,finalRoad "+finalRoad);
-					car.setNextRoad(finalRoad);
-				}
 
-//				Iterator<Road> iterator = roads.iterator();
+				//				Iterator<Road> iterator = roads.iterator();
 //				Road currentRoad;
 //				while(iterator.hasNext()){
 //					currentRoad = iterator.next();
@@ -145,21 +154,32 @@ public class Road {
 //						iterator.remove();
 //					}
 //				}
-				
-				System.out.println("--------------------------------" );
+
+				if(ifDebug)System.out.println("--------------------------------" );
 				Map<Road, Boolean> lightCrossing = crossing.getLightCrossing();
-				System.out.println("size: " + lightCrossing.size());
+				if(ifDebug)System.out.println("size: " + lightCrossing.size());
 				boolean contains = false;
 				for(Road key: lightCrossing.keySet()){
 					if(key.getId() == finalRoad.getId()){
 						contains = true;
+						//System.out.println("contains = true;");
 					}
 				}
+					System.out.println("################ final road "+finalRoad.id);
+					for(Road road1 : lightCrossing.keySet()){
+						if(lightCrossing.get(road1)){
+							System.out.println("true ################### road "+road1.id);
+						}
+						if(!lightCrossing.get(road1)){
+							System.out.println("false ################### road "+road1.id);
+						}
+					}
+
 			//	boolean contains = lightCrossing.containsKey(finalRoad);
 				Set<Road> keys = lightCrossing.keySet();
-				System.out.println("lista kluczy: ");
+				if(ifDebug)System.out.println("lista kluczy: ");
 				for(Road key: keys){
-					System.out.println(key.getId());
+					if(ifDebug)	System.out.println(key.getId());
 				}
 				System.out.println("--------------------------------contains: " + contains);
 				boolean value = false; 
@@ -174,39 +194,30 @@ public class Road {
 				System.out.println("--------------------------------value: " + value);
 				if(!contains || !value){
 					if(ifDebug)System.out.println(car.toString() + " return$$$");
-					System.out.println("hello1");
+					if(ifDebug)System.out.println("hello1");
+					//System.out.println("return emptyCrossing");
 					return emptyCrossing;			
 					}
 				System.out.println("hello");
 				pathIterator.remove();
 				
 				if(ifDebug)System.out.println(car.toString() + " po return, road " + road + " ,finalRoad" + finalRoad);
+				//System.out.println("currentCrossing = crossing");
+				//if(crossing == null)System.out.println("crossing is null");
 				currentCrossing = crossing;
 				car.addNumberOfCoveredCrossings();
 				if(road !=null){
 					road.carsOnRoad.remove(car); //usuwam auto z tej drogi
 				}
 
-
-
-
-				
-
 				finalRoad.carsOnRoad.add(car); //dodanie auta do odpowiedniej drogi
 
-				if(car == null){
-					if(ifDebug)System.out.println("car == null "+car.toString()+ " road " + road+ " ,finalRoad " + finalRoad);
-				}
 				if(car.getCars() == null){
 					if(ifDebug)System.out.println("car.getCars() == null "+car.toString()+ " road " + road+ " ,finalRoad " + finalRoad);
 				}
 				if(car.getCars().getRoad(car) == null){
 					if(ifDebug)System.out.println("car.getCars().getRoad(car) == null "+car.toString()+ " road" + road+ " ,finalRoad " + finalRoad);
 				}
-
-
-
-
 
 				if(finalRoad.startPoint.getX() > (car.getCurrentPosition().getX()-5)
 						&& finalRoad.startPoint.getX() < (car.getCurrentPosition().getX()+5)
@@ -252,6 +263,8 @@ public class Road {
 			//System.out.println("not changed :(");
 	
 		}
+		//System.out.println("return current Crossing");
+		//if(currentCrossing==null)System.out.println("currentCrossing==null");
 		return currentCrossing;
     }
     
@@ -334,7 +347,7 @@ public class Road {
 	public int findTargetRoad(int id){
 		Random rand = new Random();
 		int targetId = rand.nextInt(25);
-		if(targetId == id){
+		while(targetId == id){
 			targetId = rand.nextInt(25);
 		}
 		return targetId;
@@ -446,10 +459,10 @@ public class Road {
 			}
 			roads.add(targetRoad);
 		}
-		System.out.println("droga do celu: ");
-		for (Road road: roads){
-			System.out.println(road.getId());
-		}
+		//System.out.println("droga do celu: ");
+		//for (Road road: roads){
+		//	System.out.println(road.getId());
+		//}
 		
 		return roads;
 	}
