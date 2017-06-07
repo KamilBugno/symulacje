@@ -20,14 +20,18 @@ public class Targets {
 	}
 	
 public void createTargets(){
-	
+ System.out.println("sssss");
+	for(Crossing crossing: cityCrossings){
+     System.out.println(crossing.toString());
+    }
 	List<Road> roads;
 	List<Integer> ids;
 	
 	
 
  ids = new ArrayList<>(Arrays.asList(0)); //	0 -> 0
- targets.put(0, createRoadList(ids));
+ roads = createRoadList(ids);
+ targets.put(0, roads);
  ids = new ArrayList<>(Arrays.asList(12, 10)); //	1 -> 12, 10
  targets.put(1, createRoadList(ids));
  ids = new ArrayList<>(Arrays.asList(23,28)); //	2 -> 23, 28
@@ -79,7 +83,15 @@ public void createTargets(){
  targets.put(24, createRoadList(ids));
  ids = new ArrayList<>(Arrays.asList(25)); // 25 -> 25
  targets.put(25, createRoadList(ids));
-	
+
+ for (Integer name: targets.keySet()){
+
+  String key =name.toString();
+  String value = targets.get(name).toString();
+  System.out.println(key + " " + value);
+
+ }
+
 }
 
 public List<Road> getTarget(Integer id){
@@ -92,7 +104,9 @@ List<Road> createRoadList(List<Integer> ids){
 		Road r;
 		for(Integer id: ids){
 			r = findRoad(id);
-			roads.add(r);
+            if(r!= null) {
+             roads.add(r);
+            }
 		}		
 		return roads;
 	}
@@ -101,7 +115,9 @@ List<Road> createRoadList(List<Integer> ids){
 	private Road findRoad(int id){
 		for(Crossing crossing: cityCrossings){
 			for(Road road: crossing.getOut()){
+             System.out.println("f" + road.toString());
 				if(road.getId() == id){
+                 System.out.println("wybrana " + road.toString());
 					return road;
 				}
 			}

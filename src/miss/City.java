@@ -13,6 +13,7 @@ public class City {
 		return instance;
 	}
 	public void addCrossing(Crossing crossing){
+		System.out.println("aaaa(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((a");
 		crossings.add(crossing);
 	}
 	public List<Crossing> getCrossings(){

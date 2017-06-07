@@ -35,7 +35,7 @@ public class Car implements Steppable{
 	private boolean areStatisticsShowed = false;
 	private int numberOfCoveredCrossings;
 	private Road nextRoad;
-	private Targets target = Targets.getInstance();
+	private Targets target;
 	private List<Road> pathToTarget;
 	private Road thisCarsRoad;
 	
@@ -57,17 +57,18 @@ public class Car implements Steppable{
 
 	@Override
 	public void step(SimState state) {
-
+		target = Targets.getInstance();
 		generateStatistics();
 		cars = (Cars) state;
 		cars.getRoad(this).setCarSpeedValues(this);
 		int id = cars.getRoad(this).getId();
 
 		if(isInitialStep){
-			pathToTarget = target.getTarget(id);
+
 			thisCarsRoad = cars.getRoad(this);
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));
 			isInitialStep = false;
+			pathToTarget = target.getTarget(id);
 		}
 		
 		Double2D me = cars.getYard().getObjectLocation(this);

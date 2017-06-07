@@ -140,7 +140,7 @@ public class Road {
 			
 				
 				System.out.println("czy jest w mapie? " + crossing.getLightCrossing().get(finalRoad));
-				if(!crossing.getLightCrossing().get(finalRoad)){
+				if(crossing!=null && crossing.getLightCrossing().get(finalRoad) &&!crossing.getLightCrossing().get(finalRoad)){
 					
 					car.removeFirstOnPath();
 					if(ifDebug)System.out.println(car.toString() + " return$$$");
