@@ -43,7 +43,7 @@ public class Cars extends SimState{
 		super.start();
 		yard.clear();
 		for(Crossing crossing: cityCrossings){
-			schedule.scheduleRepeating(crossing, 1000.0);
+			schedule.scheduleRepeating(crossing, 10.0);
 			for(Road road: crossing.getIn()){
 				for(Car car: road.getCarsOnRoad()){
 					schedule.scheduleRepeating(car);

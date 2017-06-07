@@ -22,19 +22,22 @@ public class Crossing implements Steppable {
 		lightCrossing = new HashMap<>();
 		System.out.println("jestem w konstruktorze crossing");
 		for (Road road : out){
-			System.out.println("id drogi: " + road.getId() + " czy jest double? " + road.isDoubleRoad());
-			lightCrossing.put(road,false);
+			
+			lightCrossing.put(road,true);
 		}
 		for(Road road: in){
 			if(road.isDoubleRoad()){
-				lightCrossing.put(road, false);
+				lightCrossing.put(road, true);
 			}
 		}
 		if(out.size()>0){
+			lightCrossing.remove(out.get(0));
 			lightCrossing.put(out.get(0), true);
 		}
 		index = 0;
-
+		for(Road road: lightCrossing.keySet()){
+			System.out.println("id drogi: " + road.getId() + " czy jest double? " + road.isDoubleRoad());
+		}
 	}
 
 	public List<Road> getIn() {
@@ -62,7 +65,7 @@ public class Crossing implements Steppable {
 		if(currentChange == -1){
 			currentChange = outRoadSize - 1;
 		}
-		lightCrossing.put(out.get(currentChange), false);
+		lightCrossing.put(out.get(currentChange), true);
 		lightCrossing.put(out.get(index), true);
 		
 	}
