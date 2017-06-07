@@ -37,6 +37,7 @@ public class Car implements Steppable{
 	private Road nextRoad;
 	private Targets target = Targets.getInstance();
 	private List<Road> pathToTarget;
+	private Road thisCarsRoad;
 	
 	public Car(MutableDouble2D startPosition)
 	{
@@ -58,13 +59,13 @@ public class Car implements Steppable{
 	public void step(SimState state) {
 
 		generateStatistics();
-
 		cars = (Cars) state;
 		cars.getRoad(this).setCarSpeedValues(this);
 		int id = cars.getRoad(this).getId();
 
 		if(isInitialStep){
 			pathToTarget = target.getTarget(id);
+			thisCarsRoad = cars.getRoad(this);
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));
 			isInitialStep = false;
 		}
@@ -290,9 +291,9 @@ public class Car implements Steppable{
 		return needToStop;
 	}
 
-	public Road getNextRoad() {
-		return nextRoad;
-	}
+//	public Road getNextRoad() {
+//		return nextRoad;
+//	}
 
 	public void setNextRoad(Road nextRoad) {
 		this.nextRoad = nextRoad;
@@ -302,6 +303,14 @@ public class Car implements Steppable{
 	}
 	public void removeFirstOnPath(){
 		pathToTarget.remove(0);
+	}
+	public Road getNextRoad(){
+		if(pathToTarget.size() != 0){
+			return pathToTarget.get(0);
+		}
+		else{
+			return thisCarsRoad;
+		}
 	}
 
 }
