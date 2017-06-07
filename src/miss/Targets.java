@@ -9,9 +9,15 @@ import java.util.Map;
 public class Targets {
     private City city = City.getInstance();
 	private List<Crossing> cityCrossings = city.getCrossings();
-	public Map<Integer, List<Road>> targets = new HashMap<Integer, List<Road>>();
+	private Map<Integer, List<Road>> targets = new HashMap<Integer, List<Road>>();
 	
-	
+	private static final Targets instance = new Targets();
+	private Targets(){		
+		createTargets();
+	}
+	public static Targets getInstance(){
+		return instance;
+	}
 	
 public void createTargets(){
 	
