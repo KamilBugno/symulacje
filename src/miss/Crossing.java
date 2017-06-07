@@ -65,4 +65,12 @@ public class Crossing implements Steppable {
 	public void setLightCrossing(Map<Road, Boolean> lightCrossing) {
 		this.lightCrossing = lightCrossing;
 	}
+	public boolean isEmpty(){
+		if(getIn().isEmpty() && getOut().isEmpty()){
+			System.out.println("empty");
+			return true;
+		}
+		System.out.println(" not empty");
+		return false;
+	}
 }

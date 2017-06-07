@@ -64,7 +64,8 @@ public class Road {
         else if(diff <= 1 || !isOnTheRoad){
         	 if(checkIfNeedToChangeRoad(car)){
 				 car.setNeedToStop(true);
-        		 if(changeRoad(car)!= null){
+				 Crossing c = changeRoad(car);
+        		 if(!c.isEmpty() && c!=null){
 					 car.getCarStatistics().addCrossings();
 				 }
         	 }
@@ -96,8 +97,8 @@ public class Road {
 		if(road == null){
 			if(ifDebug)System.out.println("Road jest nullem");
 		}
-
-		Crossing currentCrossing = null;
+		Crossing emptyCrossing = new Crossing (new ArrayList<Road>(), new ArrayList<Road>());
+		Crossing currentCrossing = emptyCrossing;
 
 		
 		for(Crossing crossing : cityCrossings){
@@ -105,7 +106,7 @@ public class Road {
 			if(currRoad.getId() == road.getId()){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
 				List<Road> roads = crossing.getOut();
 				Road finalRoad = car.getNextRoad();
-
+				
 				if(finalRoad==null){
 					int size = roads.size();
 					Random rand = new Random();
@@ -126,7 +127,7 @@ public class Road {
 
 				if(!crossing.getLightCrossing().get(finalRoad)){
 					if(ifDebug)System.out.println(car.toString() + " return$$$");
-					return null;
+					return emptyCrossing;
 				}
 
 				if(ifDebug)System.out.println(car.toString() + " po return, road " + road + " ,finalRoad" + finalRoad);
