@@ -300,5 +300,8 @@ public class Car implements Steppable{
 	public List<Road> getPath(){
 		return pathToTarget;
 	}
+	public void removeFirstOnPath(){
+		pathToTarget.remove(0);
+	}
 
 }
