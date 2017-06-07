@@ -33,7 +33,7 @@ public class Road {
     public Road(Double2D startPoint, Double2D endPoint, boolean vertical, boolean left, boolean doubleRoad, int id){
 		carsOnRoad = new ArrayList<>();
         random = new MersenneTwisterFast();
-        numCars = 3;
+        numCars = 5;
         this.vertical = vertical;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
@@ -140,7 +140,7 @@ public class Road {
 			
 				
 				System.out.println("czy jest w mapie? " + crossing.getLightCrossing().get(finalRoad));
-				if(crossing!=null && crossing.getLightCrossing().get(finalRoad) &&!crossing.getLightCrossing().get(finalRoad)){
+				if(crossing!=null && crossing.getLightCrossing().get(finalRoad)!= null && !crossing.getLightCrossing().get(finalRoad)){
 					
 					car.removeFirstOnPath();
 					if(ifDebug)System.out.println(car.toString() + " return$$$");
