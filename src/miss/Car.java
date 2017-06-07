@@ -13,6 +13,7 @@ import sim.engine.Steppable;
 import sim.util.Double2D;
 import sim.util.MutableDouble2D;
 
+import java.util.List;
 import java.util.Random;
 
 public class Car implements Steppable{
@@ -34,6 +35,8 @@ public class Car implements Steppable{
 	private boolean areStatisticsShowed = false;
 	private int numberOfCoveredCrossings;
 	private Road nextRoad;
+	private Targets target = Targets.getInstance();
+	private List<Road> pathToTarget;
 	
 	public Car(MutableDouble2D startPosition)
 	{
@@ -58,8 +61,10 @@ public class Car implements Steppable{
 
 		cars = (Cars) state;
 		cars.getRoad(this).setCarSpeedValues(this);
+		int id = cars.getRoad(this).getId();
 
 		if(isInitialStep){
+			pathToTarget = target.getTarget(id);
 			cars.getYard().setObjectLocation(this, new Double2D(startPosition));
 			isInitialStep = false;
 		}
@@ -291,6 +296,9 @@ public class Car implements Steppable{
 
 	public void setNextRoad(Road nextRoad) {
 		this.nextRoad = nextRoad;
+	}
+	public List<Road> getPath(){
+		return pathToTarget;
 	}
 
 }
