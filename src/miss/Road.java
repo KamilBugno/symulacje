@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.SynchronousQueue;
 
@@ -90,42 +91,58 @@ public class Road {
 
     public Crossing changeRoad(Car car){
    	 if(ifDebug)System.out.println("changeRoad "+car.toString());
-    	
+  // 	List<Road> pathToTarget = car.getPath();
+		Crossing emptyCrossing = new Crossing (new ArrayList<Road>(), new ArrayList<Road>());
+		Crossing currentCrossing = emptyCrossing;
 		Road road = car.getCars().getRoad(car); //pobieram droge na ktorej znajduje sie auto
+		if(road == car.getNextRoad()){
+			return emptyCrossing;
+		}
+		
 		boolean changed = false;
 		int id = 0;
 		if(road == null){
 			if(ifDebug)System.out.println("Road jest nullem");
 		}
-		Crossing emptyCrossing = new Crossing (new ArrayList<Road>(), new ArrayList<Road>());
-		Crossing currentCrossing = emptyCrossing;
+
 
 		
 		for(Crossing crossing : cityCrossings){
 			for(Road currRoad: crossing.getIn()){
 			if(currRoad.getId() == road.getId()){ //skrzyzowanie na ktorym jest dane auto jako na drodze IN
 				List<Road> roads = crossing.getOut();
+				System.out.println("aakkakakaka");
 				Road finalRoad = car.getNextRoad();
+				System.out.println("lalalala");
+//				if(finalRoad==null){
+//					int size = roads.size();
+//					Random rand = new Random();
+//					int index = rand.nextInt(size);
+//					finalRoad = crossing.getOut().get(index);
+//					if(ifDebug)System.out.println(car.toString() + " finalRoad==null, road "+road + " ,finalRoad "+finalRoad);
+//					car.setNextRoad(finalRoad);
+//				}
+//
+//				Iterator<Road> iterator = roads.iterator();
+//				Road currentRoad;
+//				while(iterator.hasNext()){
+//					currentRoad = iterator.next();
+//					if(currentRoad.isDoubleRoad()){
+//						iterator.remove();
+//					}
+//				}
+				System.out.println("current road id: " + currRoad.getId());
+				System.out.println("final road id: " + finalRoad.getId());
+				Map<Road, Boolean> lights = crossing.getLightCrossing();
+				for(Road r: lights.keySet()){
+					System.out.println("roadId: " + r.id + " value: "+ lights.get(r));
+				}
+			
 				
-				if(finalRoad==null){
-					int size = roads.size();
-					Random rand = new Random();
-					int index = rand.nextInt(size);
-					finalRoad = crossing.getOut().get(index);
-					if(ifDebug)System.out.println(car.toString() + " finalRoad==null, road "+road + " ,finalRoad "+finalRoad);
-					car.setNextRoad(finalRoad);
-				}
-
-				Iterator<Road> iterator = roads.iterator();
-				Road currentRoad;
-				while(iterator.hasNext()){
-					currentRoad = iterator.next();
-					if(currentRoad.isDoubleRoad()){
-						iterator.remove();
-					}
-				}
-
+				System.out.println("czy jest w mapie? " + crossing.getLightCrossing().get(finalRoad));
 				if(!crossing.getLightCrossing().get(finalRoad)){
+					
+					car.removeFirstOnPath();
 					if(ifDebug)System.out.println(car.toString() + " return$$$");
 					return emptyCrossing;
 				}

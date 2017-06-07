@@ -305,10 +305,14 @@ public class Car implements Steppable{
 		pathToTarget.remove(0);
 	}
 	public Road getNextRoad(){
+		System.out.println("path to target size: --------------------------------" + pathToTarget.size());
 		if(pathToTarget.size() != 0){
+			System.out.println("1");
+			System.out.println("id: " + pathToTarget.get(0).getId());
 			return pathToTarget.get(0);
 		}
 		else{
+			System.out.println("2");
 			return thisCarsRoad;
 		}
 	}
